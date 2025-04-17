@@ -1,0 +1,14 @@
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<h1>404 Not Found</h1>
+<ul>
+<li>Code: NoSuchKey</li>
+<li>Message: The specified key does not exist.</li>
+<li>Key: logos/nhl/svg/COL_dark.png</li>
+<li>RequestId: 86D72WKXM2JTTTR7</li>
+<li>HostId: 9NK9nY+MQOHPiZhLS0DHYISWAdw9ECp7qEg9zkiUh9CtbJlG7HtFP9BbQuleNYxbkDzQXEHpaBQ=</li>
+</ul>
+<hr/>
+</body>
+</html>

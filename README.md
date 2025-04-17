@@ -1,22 +1,66 @@
-# NHL Playoff Hockey Pool
+# Geddes Hockey Pool
 
-A web application for managing NHL playoff hockey pools. Users can join leagues, make their playoff picks, and compete with friends and family.
+A web application for managing NHL playoff hockey pools, built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
 ## Features
 
-- Google Authentication
-- League Management
-- NHL Playoff Bracket Visualization
-- Real-time Updates
-- Leaderboard
-- Pick Management
+- View NHL playoff matchups with team logos
+- Make picks for each series including number of games
+- View all participants' picks in a dashboard
+- Real-time updates using Supabase
+- Conference-based organization of matchups
+- Modern, responsive UI
 
 ## Tech Stack
 
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- Supabase (Authentication & Database)
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Authentication)
+- **Styling**: Tailwind CSS
+- **Deployment**: Vercel (planned)
+
+## Development
+
+1. Clone the repository:
+```bash
+git clone https://github.com/rorygeddes/GeddesHockeyPool.git
+cd GeddesHockeyPool
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+Create a `.env.local` file with:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+4. Run the development server:
+```bash
+npm run dev
+```
+
+## Project Structure
+
+- `/app` - Next.js app router pages and API routes
+- `/components` - Reusable React components
+- `/lib` - Utility functions and configurations
+- `/types` - TypeScript type definitions
+- `/supabase` - Supabase configurations and migrations
+
+## Database Schema
+
+The application uses the following main tables:
+
+- `matchups` - Stores playoff matchups
+- `picks` - Stores user picks for each matchup
+
+## Contributing
+
+This is a private project for the Geddes family hockey pool.
 
 ## Getting Started
 
@@ -25,42 +69,3 @@ A web application for managing NHL playoff hockey pools. Users can join leagues,
    ```bash
    npm install
    ```
-3. Create a `.env.local` file with your Supabase credentials:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-4. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-## Project Structure
-
-- `/src/app` - Next.js app router pages
-- `/src/components` - Reusable React components
-- `/src/lib` - Utility functions and shared logic
-- `/src/types` - TypeScript type definitions
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
