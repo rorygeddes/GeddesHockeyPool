@@ -1,13 +1,8 @@
+import Image from 'next/image';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-
-interface Team {
-  id: string;
-  name: string;
-  abbreviation: string;
-  logo: string;
-  conference: 'Eastern' | 'Western';
-}
+import { useState } from 'react';
+import type { Team } from '@/lib/teams';
 
 interface Pick {
   userName: string;
@@ -30,6 +25,8 @@ export default function MatchupDetails({
   awayTeam,
   picks,
 }: MatchupDetailsProps) {
+  const [selectedTeam, setSelectedTeam] = useState<'home' | 'away'>('home');
+
   const homeTeamPicks = picks.filter(pick => pick.selectedTeam.id === homeTeam.id);
   const awayTeamPicks = picks.filter(pick => pick.selectedTeam.id === awayTeam.id);
 
@@ -62,61 +59,90 @@ export default function MatchupDetails({
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <div className="flex items-center space-x-4">
-                      <img src={homeTeam.logo} alt={homeTeam.name} className="h-16 w-16" />
-                      <span className="text-2xl font-semibold">vs</span>
-                      <img src={awayTeam.logo} alt={awayTeam.name} className="h-16 w-16" />
-                    </div>
                     <button
-                      type="button"
-                      className="text-gray-400 hover:text-gray-500"
-                      onClick={onClose}
+                      onClick={() => setSelectedTeam('home')}
+                      className={`flex-1 p-4 rounded-l-lg ${
+                        selectedTeam === 'home'
+                          ? 'bg-gray-100 border-b-2 border-blue-500'
+                          : 'hover:bg-gray-50'
+                      }`}
                     >
-                      <span className="sr-only">Close</span>
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      <div className="flex items-center justify-center gap-3">
+                        <div className="relative w-8 h-8">
+                          <Image
+                            src={homeTeam.logo}
+                            alt={homeTeam.name}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <span className="font-semibold">{homeTeam.name}</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setSelectedTeam('away')}
+                      className={`flex-1 p-4 rounded-r-lg ${
+                        selectedTeam === 'away'
+                          ? 'bg-gray-100 border-b-2 border-blue-500'
+                          : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center gap-3">
+                        <div className="relative w-8 h-8">
+                          <Image
+                            src={awayTeam.logo}
+                            alt={awayTeam.name}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <span className="font-semibold">{awayTeam.name}</span>
+                      </div>
                     </button>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-2 gap-8">
-                    {/* Home Team Picks */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                        <img src={homeTeam.logo} alt={homeTeam.name} className="h-8 w-8" />
-                        <span>{homeTeam.name}</span>
-                      </h3>
-                      <div className="space-y-2">
-                        {homeTeamPicks.map((pick, index) => (
-                          <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100">
-                            <span className="font-medium">{pick.userName}</span>
-                            <span>in {pick.games}</span>
+                  <div className="space-y-4">
+                    {selectedTeam === 'home' ? (
+                      homeTeamPicks.length > 0 ? (
+                        homeTeamPicks.map((pick, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-6 h-6">
+                                <Image
+                                  src={pick.selectedTeam.logo}
+                                  alt={pick.selectedTeam.name}
+                                  fill
+                                  className="object-contain"
+                                />
+                              </div>
+                              <span>{pick.userName}</span>
+                            </div>
+                            <span className="text-gray-600">in {pick.games}</span>
                           </div>
-                        ))}
-                        {homeTeamPicks.length === 0 && (
-                          <p className="text-gray-500 text-sm">No picks for {homeTeam.name}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Away Team Picks */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                        <img src={awayTeam.logo} alt={awayTeam.name} className="h-8 w-8" />
-                        <span>{awayTeam.name}</span>
-                      </h3>
-                      <div className="space-y-2">
-                        {awayTeamPicks.map((pick, index) => (
-                          <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100">
-                            <span className="font-medium">{pick.userName}</span>
-                            <span>in {pick.games}</span>
+                        ))
+                      ) : (
+                        <p className="text-center text-gray-500">No picks for {homeTeam.name}</p>
+                      )
+                    ) : awayTeamPicks.length > 0 ? (
+                      awayTeamPicks.map((pick, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                          <div className="flex items-center gap-2">
+                            <div className="relative w-6 h-6">
+                              <Image
+                                src={pick.selectedTeam.logo}
+                                alt={pick.selectedTeam.name}
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                            <span>{pick.userName}</span>
                           </div>
-                        ))}
-                        {awayTeamPicks.length === 0 && (
-                          <p className="text-gray-500 text-sm">No picks for {awayTeam.name}</p>
-                        )}
-                      </div>
-                    </div>
+                          <span className="text-gray-600">in {pick.games}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center text-gray-500">No picks for {awayTeam.name}</p>
+                    )}
                   </div>
                 </div>
               </Dialog.Panel>

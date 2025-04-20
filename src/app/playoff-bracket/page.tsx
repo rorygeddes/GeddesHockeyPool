@@ -68,10 +68,6 @@ const BracketConnector = ({ className = '' }: { className?: string }) => (
   <div className={`w-[60px] border-t-2 border-gray-600 ${className}`} />
 );
 
-const EmptyMatchup = ({ className = '' }: { className?: string }) => (
-  <div className={`w-[300px] h-[100px] ${className}`} />
-);
-
 export default function PlayoffBracket() {
   const [matchups, setMatchups] = useState<Matchup[]>([]);
   const [error, setError] = useState<string | null>(null);

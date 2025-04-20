@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import MatchupDetails from '@/components/MatchupDetails';
+import Image from 'next/image';
 
 interface Team {
   id: string;
@@ -265,10 +266,28 @@ export default function DashboardPage() {
                 onClick={() => setSelectedMatchup(matchup)}
               >
                 <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center space-x-4">
-                    <img src={matchup.homeTeam.logo} alt={matchup.homeTeam.name} className="h-12 w-12" />
-                    <span className="text-xl font-semibold">vs</span>
-                    <img src={matchup.awayTeam.logo} alt={matchup.awayTeam.name} className="h-12 w-12" />
+                  <div className="flex items-center space-x-2">
+                    <div className="relative w-8 h-8">
+                      <Image
+                        src={matchup.homeTeam.logo}
+                        alt={matchup.homeTeam.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <span>{matchup.homeTeam.name}</span>
+                  </div>
+                  <span>vs</span>
+                  <div className="flex items-center space-x-2">
+                    <span>{matchup.awayTeam.name}</span>
+                    <div className="relative w-8 h-8">
+                      <Image
+                        src={matchup.awayTeam.logo}
+                        alt={matchup.awayTeam.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -294,10 +313,28 @@ export default function DashboardPage() {
                 onClick={() => setSelectedMatchup(matchup)}
               >
                 <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center space-x-4">
-                    <img src={matchup.homeTeam.logo} alt={matchup.homeTeam.name} className="h-12 w-12" />
-                    <span className="text-xl font-semibold">vs</span>
-                    <img src={matchup.awayTeam.logo} alt={matchup.awayTeam.name} className="h-12 w-12" />
+                  <div className="flex items-center space-x-2">
+                    <div className="relative w-8 h-8">
+                      <Image
+                        src={matchup.homeTeam.logo}
+                        alt={matchup.homeTeam.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <span>{matchup.homeTeam.name}</span>
+                  </div>
+                  <span>vs</span>
+                  <div className="flex items-center space-x-2">
+                    <span>{matchup.awayTeam.name}</span>
+                    <div className="relative w-8 h-8">
+                      <Image
+                        src={matchup.awayTeam.logo}
+                        alt={matchup.awayTeam.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-2">

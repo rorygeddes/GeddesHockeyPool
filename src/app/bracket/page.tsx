@@ -20,64 +20,6 @@ interface Pick {
   games: number;
 }
 
-const TeamLogo = ({ src, alt, size }: { src: string; alt: string; size: number }) => {
-  return (
-    <div className={`relative w-${size} h-${size} flex items-center justify-center`}>
-      <div className="absolute inset-0 bg-gray-100 rounded-full animate-pulse" />
-      <Image
-        src={src}
-        alt={alt}
-        width={size}
-        height={size}
-        className="relative object-contain"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.src = '/nhl-shield.svg'; // Fallback to NHL shield if team logo fails
-        }}
-      />
-    </div>
-  );
-};
-
-const MatchupCard = ({ matchup }: { matchup: Matchup }) => {
-  return (
-    <div className="bg-gray-800 rounded-lg p-4">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center">
-          <div className="w-8 h-8 relative mr-2">
-            {matchup.homeTeam?.logo && (
-              <Image
-                src={matchup.homeTeam.logo}
-                alt={`${matchup.homeTeam.name} logo`}
-                fill
-                className="object-contain"
-              />
-            )}
-          </div>
-          <span className="text-white">{matchup.homeTeam?.name || 'TBD'}</span>
-        </div>
-        <span className="text-white">0</span>
-      </div>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="w-8 h-8 relative mr-2">
-            {matchup.awayTeam?.logo && (
-              <Image
-                src={matchup.awayTeam.logo}
-                alt={`${matchup.awayTeam.name} logo`}
-                fill
-                className="object-contain"
-              />
-            )}
-          </div>
-          <span className="text-white">{matchup.awayTeam?.name || 'TBD'}</span>
-        </div>
-        <span className="text-white">0</span>
-      </div>
-    </div>
-  );
-};
-
 export default function BracketPage() {
   const [matchups, setMatchups] = useState<Matchup[]>([]);
   const [loading, setLoading] = useState(true);
