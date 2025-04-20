@@ -40,6 +40,7 @@ export default function Navbar() {
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Teams', href: '/teams' },
     // My Picks will be added back for Round 2
   ];
 

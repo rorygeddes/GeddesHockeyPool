@@ -1,127 +1,322 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Image from 'next/image';
-import type { Team } from '@/lib/teams';
 import { teams } from '@/lib/teams';
 
 interface Pick {
-  userName: string;
-  selectedTeam: Team;
+  name: string;
+  selectedTeam: string;
   games: number;
 }
 
-interface MatchupWithPicks {
+interface Matchup {
   id: string;
-  homeTeam: Team;
-  awayTeam: Team;
-  round: number;
-  picks: Pick[];
+  homeTeam: string;
+  awayTeam: string;
+  conference: 'Eastern' | 'Western';
 }
 
+const matchups: Matchup[] = [
+  { id: 'TOR-OTT', homeTeam: 'Toronto Maple Leafs', awayTeam: 'Ottawa Senators', conference: 'Eastern' },
+  { id: 'TBL-FLA', homeTeam: 'Tampa Bay Lightning', awayTeam: 'Florida Panthers', conference: 'Eastern' },
+  { id: 'WSH-MTL', homeTeam: 'Washington Capitals', awayTeam: 'Montreal Canadiens', conference: 'Eastern' },
+  { id: 'CAR-NJD', homeTeam: 'Carolina Hurricanes', awayTeam: 'New Jersey Devils', conference: 'Eastern' },
+  { id: 'WPG-STL', homeTeam: 'Winnipeg Jets', awayTeam: 'St. Louis Blues', conference: 'Western' },
+  { id: 'DAL-COL', homeTeam: 'Dallas Stars', awayTeam: 'Colorado Avalanche', conference: 'Western' },
+  { id: 'VGS-MIN', homeTeam: 'Vegas Golden Knights', awayTeam: 'Minnesota Wild', conference: 'Western' },
+  { id: 'LA-EDM', homeTeam: 'Los Angeles Kings', awayTeam: 'Edmonton Oilers', conference: 'Western' }
+];
+
+const teamMembers = [
+  {
+    name: 'GMA',
+    picks: [
+      { team: 'TOR', games: 7, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 7, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'DAL', games: 7, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 7, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Fiona',
+    picks: [
+      { team: 'TOR', games: 7, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'MTL', games: 7, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Claire',
+    picks: [
+      { team: 'OTT', games: 5, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 4, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Noah',
+    picks: [
+      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 5, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Cooper',
+    picks: [
+      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'LA', games: 6, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Rayna',
+    picks: [
+      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+      { team: 'STL', games: 7, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 7, matchupId: 'DAL-COL' },
+      { team: 'MIN', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Rory',
+    picks: [
+      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 7, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 7, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Grady',
+    picks: [
+      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Crosby',
+    picks: [
+      { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'MTL', games: 6, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+      { team: 'DAL', games: 7, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Bow',
+    picks: [
+      { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'LA', games: 6, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Jill',
+    picks: [
+      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
+      { team: 'MTL', games: 6, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 4, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Jordan',
+    picks: [
+      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 4, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 7, matchupId: 'VGS-MIN' },
+      { team: 'LA', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Grant',
+    picks: [
+      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 7, matchupId: 'VGS-MIN' },
+      { team: 'LA', games: 5, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Dave',
+    picks: [
+      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+      { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Rhonda',
+    picks: [
+      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
+    ]
+  },
+  {
+    name: 'Tina',
+    picks: [
+      { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
+      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'NJD', games: 7, matchupId: 'CAR-NJD' },
+      { team: 'STL', games: 6, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 7, matchupId: 'DAL-COL' },
+      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'LA', games: 7, matchupId: 'LA-EDM' }
+    ]
+  }
+];
+
 export default function DashboardPage() {
-  const router = useRouter();
-  const [matchups, setMatchups] = useState<MatchupWithPicks[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const supabase = createClientComponentClient();
+  const [selectedMatchup, setSelectedMatchup] = useState<string | null>(null);
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) {
-        router.push('/sign-in');
-        return null;
-      }
-      return user;
+  const getTeamAbbreviation = (teamName: string): string => {
+    const abbreviations: { [key: string]: string } = {
+      'Toronto Maple Leafs': 'TOR',
+      'Ottawa Senators': 'OTT',
+      'Tampa Bay Lightning': 'TBL',
+      'Florida Panthers': 'FLA',
+      'Washington Capitals': 'WSH',
+      'Montreal Canadiens': 'MTL',
+      'Carolina Hurricanes': 'CAR',
+      'New Jersey Devils': 'NJD',
+      'Winnipeg Jets': 'WPG',
+      'St. Louis Blues': 'STL',
+      'Dallas Stars': 'DAL',
+      'Colorado Avalanche': 'COL',
+      'Vegas Golden Knights': 'VGK',
+      'Minnesota Wild': 'MIN',
+      'Los Angeles Kings': 'LAK',
+      'Edmonton Oilers': 'EDM'
     };
+    return abbreviations[teamName] || '';
+  };
 
-    const fetchMatchupsAndPicks = async () => {
-      try {
-        const user = await checkUser();
-        if (!user) return;
+  const getTeamLogo = (teamName: string) => {
+    const abbreviation = getTeamAbbreviation(teamName);
+    const teamKey = Object.keys(teams).find(
+      key => teams[key].abbreviation === abbreviation
+    );
+    if (!teamKey || !teams[teamKey].logo) {
+      console.warn(`No logo found for team: ${teamName}`);
+      return '/placeholder-logo.png'; // You might want to add a placeholder logo
+    }
+    return teams[teamKey].logo;
+  };
 
-        // First, fetch matchups
-        const { data: matchupsData, error: matchupsError } = await supabase
-          .from('matchups')
-          .select('*')
-          .order('round');
+  const getPicksForMatchup = (matchupId: string) => {
+    return teamMembers
+      .map(member => ({
+        name: member.name,
+        pick: member.picks.find(p => p.matchupId === matchupId)
+      }))
+      .filter(item => item.pick)
+      .map(item => ({
+        name: item.name,
+        selectedTeam: item.pick!.team,
+        games: item.pick!.games
+      }));
+  };
 
-        if (matchupsError) throw matchupsError;
-
-        // Then, fetch picks for each matchup
-        const picksPromises = matchupsData.map(matchup =>
-          supabase
-            .from('picks')
-            .select(`
-              id,
-              user_id,
-              selected_team_id,
-              games,
-              users (
-                id,
-                email
-              )
-            `)
-            .eq('matchup_id', matchup.id)
-        );
-
-        const picksResults = await Promise.all(picksPromises);
-        
-        const formattedMatchups: MatchupWithPicks[] = matchupsData.map((matchup, index) => {
-          const picksData = picksResults[index].data || [];
-          return {
-            id: matchup.id,
-            homeTeam: teams[matchup.home_team_id],
-            awayTeam: teams[matchup.away_team_id],
-            round: matchup.round,
-            picks: picksData.map((pick) => ({
-              userName: pick.users?.email?.split('@')[0] || 'Unknown',
-              selectedTeam: teams[pick.selected_team_id],
-              games: pick.games,
-            })),
-          };
-        });
-
-        setMatchups(formattedMatchups);
-      } catch (err) {
-        console.error('Error fetching matchups and picks:', err);
-        setError('Failed to load matchups and picks');
-      } finally {
-        setLoading(false);
-      }
+  const getFullTeamName = (abbreviation: string): string => {
+    const teamNames: { [key: string]: string } = {
+      'TOR': 'Toronto Maple Leafs',
+      'OTT': 'Ottawa Senators',
+      'TBL': 'Tampa Bay Lightning',
+      'FLA': 'Florida Panthers',
+      'WSH': 'Washington Capitals',
+      'MTL': 'Montreal Canadiens',
+      'CAR': 'Carolina Hurricanes',
+      'NJD': 'New Jersey Devils',
+      'WPG': 'Winnipeg Jets',
+      'STL': 'St. Louis Blues',
+      'DAL': 'Dallas Stars',
+      'COL': 'Colorado Avalanche',
+      'VGK': 'Vegas Golden Knights',
+      'VGS': 'Vegas Golden Knights',
+      'MIN': 'Minnesota Wild',
+      'LAK': 'Los Angeles Kings',
+      'LA': 'Los Angeles Kings',
+      'EDM': 'Edmonton Oilers'
     };
+    return teamNames[abbreviation] || abbreviation;
+  };
 
-    fetchMatchupsAndPicks();
-  }, [supabase, router]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-white">
-        <div className="text-red-600">{error}</div>
-      </div>
-    );
-  }
-
-  const easternMatchups = matchups.filter(
-    (matchup) => matchup.homeTeam.conference === 'Eastern'
-  );
-
-  const westernMatchups = matchups.filter(
-    (matchup) => matchup.homeTeam.conference === 'Western'
-  );
-
-  const renderPicks = (picks: Pick[]) => {
+  const renderPicks = (matchupId: string) => {
+    const picks = getPicksForMatchup(matchupId);
+    
     if (picks.length === 0) {
       return <p className="text-gray-500 text-sm italic mt-2">No picks submitted yet</p>;
     }
@@ -129,19 +324,22 @@ export default function DashboardPage() {
     return (
       <div className="mt-4 space-y-2">
         {picks.map((pick, index) => (
-          <div key={index} className="flex items-center justify-between text-sm bg-gray-50 p-2 rounded">
+          <div 
+            key={index} 
+            className="flex items-center justify-between text-sm p-2 rounded bg-gray-50"
+          >
+            <span className="font-medium">{pick.name}</span>
             <div className="flex items-center space-x-2">
               <div className="relative w-6 h-6">
                 <Image
-                  src={pick.selectedTeam.logo}
-                  alt={pick.selectedTeam.name}
+                  src={getTeamLogo(getFullTeamName(pick.selectedTeam))}
+                  alt={pick.selectedTeam}
                   fill
                   className="object-contain"
                 />
               </div>
-              <span className="font-medium">{pick.userName}</span>
+              <span className="text-gray-500">in {pick.games}</span>
             </div>
-            <span className="text-gray-600">in {pick.games}</span>
           </div>
         ))}
       </div>
@@ -154,82 +352,98 @@ export default function DashboardPage() {
         <div className="border-b border-gray-200 pb-5">
           <h1 className="text-3xl font-bold text-gray-900">Playoff Picks Dashboard</h1>
           <p className="mt-2 text-sm text-gray-500">
-            View all submitted picks for the playoff matchups.
+            Click on a matchup to view all picks. Click again to collapse.
           </p>
         </div>
 
-        <div className="mt-8 space-y-12">
+        <div className="mt-8 space-y-8">
           {/* Eastern Conference */}
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Eastern Conference</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {easternMatchups.map((matchup) => (
-                <div key={matchup.id} className="bg-white rounded-lg shadow-lg p-6">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-3">
-                      <div className="relative w-10 h-10">
-                        <Image
-                          src={matchup.homeTeam.logo}
-                          alt={matchup.homeTeam.name}
-                          fill
-                          className="object-contain"
-                        />
+            <div className="space-y-4">
+              {matchups
+                .filter(matchup => matchup.conference === 'Eastern')
+                .map((matchup) => (
+                  <div 
+                    key={matchup.id} 
+                    className={`bg-white rounded-lg shadow p-6 cursor-pointer transition-all duration-200 ${
+                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-lg'
+                    }`}
+                    onClick={() => setSelectedMatchup(selectedMatchup === matchup.id ? null : matchup.id)}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-3">
+                        <div className="relative w-10 h-10">
+                          <Image
+                            src={getTeamLogo(matchup.homeTeam)}
+                            alt={matchup.homeTeam}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <span className="font-medium">{matchup.homeTeam}</span>
                       </div>
-                      <span className="font-medium">{matchup.homeTeam.name}</span>
-                    </div>
-                    <span className="text-gray-500">vs</span>
-                    <div className="flex items-center space-x-3">
-                      <span className="font-medium">{matchup.awayTeam.name}</span>
-                      <div className="relative w-10 h-10">
-                        <Image
-                          src={matchup.awayTeam.logo}
-                          alt={matchup.awayTeam.name}
-                          fill
-                          className="object-contain"
-                        />
+                      <span className="text-gray-500">vs</span>
+                      <div className="flex items-center space-x-3">
+                        <span className="font-medium">{matchup.awayTeam}</span>
+                        <div className="relative w-10 h-10">
+                          <Image
+                            src={getTeamLogo(matchup.awayTeam)}
+                            alt={matchup.awayTeam}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
                       </div>
                     </div>
+                    {selectedMatchup === matchup.id && renderPicks(matchup.id)}
                   </div>
-                  {renderPicks(matchup.picks)}
-                </div>
-              ))}
+                ))}
             </div>
           </div>
 
           {/* Western Conference */}
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Western Conference</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {westernMatchups.map((matchup) => (
-                <div key={matchup.id} className="bg-white rounded-lg shadow-lg p-6">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-3">
-                      <div className="relative w-10 h-10">
-                        <Image
-                          src={matchup.homeTeam.logo}
-                          alt={matchup.homeTeam.name}
-                          fill
-                          className="object-contain"
-                        />
+            <div className="space-y-4">
+              {matchups
+                .filter(matchup => matchup.conference === 'Western')
+                .map((matchup) => (
+                  <div 
+                    key={matchup.id} 
+                    className={`bg-white rounded-lg shadow p-6 cursor-pointer transition-all duration-200 ${
+                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-lg'
+                    }`}
+                    onClick={() => setSelectedMatchup(selectedMatchup === matchup.id ? null : matchup.id)}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-3">
+                        <div className="relative w-10 h-10">
+                          <Image
+                            src={getTeamLogo(matchup.homeTeam)}
+                            alt={matchup.homeTeam}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <span className="font-medium">{matchup.homeTeam}</span>
                       </div>
-                      <span className="font-medium">{matchup.homeTeam.name}</span>
-                    </div>
-                    <span className="text-gray-500">vs</span>
-                    <div className="flex items-center space-x-3">
-                      <span className="font-medium">{matchup.awayTeam.name}</span>
-                      <div className="relative w-10 h-10">
-                        <Image
-                          src={matchup.awayTeam.logo}
-                          alt={matchup.awayTeam.name}
-                          fill
-                          className="object-contain"
-                        />
+                      <span className="text-gray-500">vs</span>
+                      <div className="flex items-center space-x-3">
+                        <span className="font-medium">{matchup.awayTeam}</span>
+                        <div className="relative w-10 h-10">
+                          <Image
+                            src={getTeamLogo(matchup.awayTeam)}
+                            alt={matchup.awayTeam}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
                       </div>
                     </div>
+                    {selectedMatchup === matchup.id && renderPicks(matchup.id)}
                   </div>
-                  {renderPicks(matchup.picks)}
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>
