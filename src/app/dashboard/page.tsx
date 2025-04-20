@@ -10,6 +10,15 @@ interface Pick {
   games: number;
 }
 
+interface TeamMember {
+  name: string;
+  picks: {
+    team: string;
+    games: number;
+    matchupId: string;
+  }[];
+}
+
 interface Matchup {
   id: string;
   homeTeam: string;
@@ -276,20 +285,6 @@ export default function DashboardPage() {
     return teams[teamKey].logo;
   };
 
-  const getPicksForMatchup = (matchupId: string) => {
-    return teamMembers
-      .map(member => ({
-        name: member.name,
-        pick: member.picks.find(p => p.matchupId === matchupId)
-      }))
-      .filter(item => item.pick)
-      .map(item => ({
-        name: item.name,
-        selectedTeam: item.pick!.team,
-        games: item.pick!.games
-      }));
-  };
-
   const getFullTeamName = (abbreviation: string): string => {
     const teamNames: { [key: string]: string } = {
       'TOR': 'Toronto Maple Leafs',
@@ -305,13 +300,27 @@ export default function DashboardPage() {
       'DAL': 'Dallas Stars',
       'COL': 'Colorado Avalanche',
       'VGK': 'Vegas Golden Knights',
-      'VGS': 'Vegas Golden Knights',
+      'VGS': 'Vegas Golden Knights', // For backward compatibility
       'MIN': 'Minnesota Wild',
       'LAK': 'Los Angeles Kings',
-      'LA': 'Los Angeles Kings',
+      'LA': 'Los Angeles Kings',  // For backward compatibility
       'EDM': 'Edmonton Oilers'
     };
     return teamNames[abbreviation] || abbreviation;
+  };
+
+  const getPicksForMatchup = (matchupId: string): Pick[] => {
+    return teamMembers
+      .map(member => ({
+        name: member.name,
+        pick: member.picks.find(p => p.matchupId === matchupId)
+      }))
+      .filter(item => item.pick)
+      .map(item => ({
+        name: item.name,
+        selectedTeam: item.pick!.team,
+        games: item.pick!.games
+      }));
   };
 
   const renderPicks = (matchupId: string) => {
