@@ -10,15 +10,6 @@ interface Pick {
   games: number;
 }
 
-interface TeamMember {
-  name: string;
-  picks: {
-    team: string;
-    games: number;
-    matchupId: string;
-  }[];
-}
-
 interface Matchup {
   id: string;
   homeTeam: string;
