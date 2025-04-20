@@ -163,21 +163,27 @@ export default function BracketPage() {
                 <div key={matchup.id} className="bg-white rounded-lg shadow p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
-                      <img
-                        src={matchup.homeTeam.logo}
-                        alt={matchup.homeTeam.name}
-                        className="w-8 h-8"
-                      />
+                      <div className="relative w-8 h-8">
+                        <Image
+                          src={matchup.homeTeam.logo}
+                          alt={matchup.homeTeam.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
                       <span>{matchup.homeTeam.name}</span>
                     </div>
                     <span>vs</span>
                     <div className="flex items-center space-x-2">
                       <span>{matchup.awayTeam.name}</span>
-                      <img
-                        src={matchup.awayTeam.logo}
-                        alt={matchup.awayTeam.name}
-                        className="w-8 h-8"
-                      />
+                      <div className="relative w-8 h-8">
+                        <Image
+                          src={matchup.awayTeam.logo}
+                          alt={matchup.awayTeam.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -195,21 +201,27 @@ export default function BracketPage() {
                 <div key={matchup.id} className="bg-white rounded-lg shadow p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
-                      <img
-                        src={matchup.homeTeam.logo}
-                        alt={matchup.homeTeam.name}
-                        className="w-8 h-8"
-                      />
+                      <div className="relative w-8 h-8">
+                        <Image
+                          src={matchup.homeTeam.logo}
+                          alt={matchup.homeTeam.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
                       <span>{matchup.homeTeam.name}</span>
                     </div>
                     <span>vs</span>
                     <div className="flex items-center space-x-2">
                       <span>{matchup.awayTeam.name}</span>
-                      <img
-                        src={matchup.awayTeam.logo}
-                        alt={matchup.awayTeam.name}
-                        className="w-8 h-8"
-                      />
+                      <div className="relative w-8 h-8">
+                        <Image
+                          src={matchup.awayTeam.logo}
+                          alt={matchup.awayTeam.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
