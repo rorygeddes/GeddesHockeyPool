@@ -26,9 +26,17 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.nhl.com',
         pathname: '/**',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/a/**',
+      },
     ],
+    domains: ['tsnplafhddbeqbqlhywv.supabase.co', 'raw.githubusercontent.com'],
   },
+  // Enable static exports if needed
+  // output: 'export',
 };
 
 module.exports = nextConfig; 

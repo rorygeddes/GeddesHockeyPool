@@ -4,9 +4,10 @@ import { NextResponse } from 'next/server';
 import { teams } from '@/app/picks/page';
 
 export async function GET() {
-  const supabase = createRouteHandlerClient({ cookies });
-  
   try {
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    
     // Get all matchups with their picks
     const { data: matchupsData, error: matchupsError } = await supabase
       .from('matchups')

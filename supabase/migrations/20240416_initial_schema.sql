@@ -1,3 +1,9 @@
+-- Drop existing views, tables and types if they exist
+DROP VIEW IF EXISTS public.matchups_with_picks;
+DROP TABLE IF EXISTS public.picks;
+DROP TABLE IF EXISTS public.matchups;
+DROP TYPE IF EXISTS team_id;
+
 -- Create teams enum type
 create type team_id as enum (
   'toronto', 'ottawa', 'tampabay', 'florida',
@@ -52,13 +58,13 @@ create policy "Users can insert their own picks"
   on public.picks for insert
   with check (auth.uid() = user_id);
 
-create policy "Users can view all picks"
-  on public.picks for select
-  using (true);
-
 create policy "Users can update their own picks"
   on public.picks for update
   using (auth.uid() = user_id);
+
+create policy "Users can view all picks"
+  on public.picks for select
+  using (true);
 
 -- Create indexes
 create index idx_picks_user_id on public.picks(user_id);
