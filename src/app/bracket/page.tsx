@@ -39,60 +39,40 @@ const TeamLogo = ({ src, alt, size }: { src: string; alt: string; size: number }
   );
 };
 
-const MatchupCard = ({ matchup, isSmall = false }: { matchup?: Matchup; isSmall?: boolean }) => {
-  if (!matchup) {
-    return (
-      <div className={`bg-white rounded-lg overflow-hidden border border-gray-200 ${
-        isSmall ? 'h-[80px] w-[240px]' : 'h-[100px] w-[280px]'
-      }`} />
-    );
-  }
-
-  const logoSize = isSmall ? 24 : 32;
-
+const MatchupCard = ({ matchup }: { matchup: Matchup }) => {
   return (
-    <div className={`bg-white rounded-lg overflow-hidden border border-gray-200 ${
-      isSmall ? 'w-[240px]' : 'w-[280px]'
-    }`}>
-      <div className="p-4 space-y-4">
-        {/* Home Team */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative w-8 h-8">
+    <div className="bg-gray-800 rounded-lg p-4">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center">
+          <div className="w-8 h-8 relative mr-2">
+            {matchup.homeTeam?.logo && (
               <Image
                 src={matchup.homeTeam.logo}
-                alt={matchup.homeTeam.name}
-                width={logoSize}
-                height={logoSize}
+                alt={`${matchup.homeTeam.name} logo`}
+                fill
                 className="object-contain"
               />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-500 text-sm font-medium">{matchup.homeTeam.seed}</span>
-              <span className="text-gray-900 font-semibold">{matchup.homeTeam.abbreviation}</span>
-            </div>
+            )}
           </div>
-          <span className="text-gray-900 font-bold tabular-nums">{matchup.homeTeam.score || 0}</span>
+          <span className="text-white">{matchup.homeTeam?.name || 'TBD'}</span>
         </div>
-        {/* Away Team */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative w-8 h-8">
+        <span className="text-white">0</span>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="w-8 h-8 relative mr-2">
+            {matchup.awayTeam?.logo && (
               <Image
                 src={matchup.awayTeam.logo}
-                alt={matchup.awayTeam.name}
-                width={logoSize}
-                height={logoSize}
+                alt={`${matchup.awayTeam.name} logo`}
+                fill
                 className="object-contain"
               />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-500 text-sm font-medium">{matchup.awayTeam.seed}</span>
-              <span className="text-gray-900 font-semibold">{matchup.awayTeam.abbreviation}</span>
-            </div>
+            )}
           </div>
-          <span className="text-gray-900 font-bold tabular-nums">{matchup.awayTeam.score || 0}</span>
+          <span className="text-white">{matchup.awayTeam?.name || 'TBD'}</span>
         </div>
+        <span className="text-white">0</span>
       </div>
     </div>
   );

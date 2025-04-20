@@ -42,9 +42,8 @@ export default function PicksPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedTeams, setSelectedTeams] = useState<Record<string, string>>({});
   const [selectedGames, setSelectedGames] = useState<Record<string, number>>({});
-  const [submittedPicks, setSubmittedPicks] = useState<Record<string, Pick>>({});
-  const [editMode, setEditMode] = useState(false);
   const [hasInitialPicks, setHasInitialPicks] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +89,6 @@ export default function PicksPage() {
         });
 
         setMatchups(formattedMatchups);
-        setSubmittedPicks(picksMap);
         setHasInitialPicks(Object.keys(picksMap).length > 0);
 
         // Initialize selected teams and games from submitted picks
@@ -146,15 +144,6 @@ export default function PicksPage() {
 
       if (upsertError) throw upsertError;
 
-      setSubmittedPicks(
-        picks.reduce((acc, pick) => ({
-          ...acc,
-          [pick.matchup_id]: {
-            teamId: pick.selected_team_id,
-            games: pick.games,
-          },
-        }), {})
-      );
       setHasInitialPicks(true);
       setEditMode(false);
     } catch (error) {
