@@ -18,6 +18,32 @@ A web application for managing NHL playoff hockey pools, built with Next.js, Typ
 - **Styling**: Tailwind CSS
 - **Deployment**: Vercel (planned)
 
+## Environment Variables
+
+The following environment variables are required for the application to work:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### Local Development
+
+1. Copy `.env.example` to `.env.local`:
+```bash
+cp .env.example .env.local
+```
+
+2. Update the values in `.env.local` with your Supabase project credentials.
+
+### Deployment
+
+When deploying to Vercel, make sure to add these environment variables in your project settings:
+
+1. Go to Vercel Dashboard > Your Project > Settings > Environment Variables
+2. Add both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. Deploy again for the changes to take effect
+
 ## Development
 
 1. Clone the repository:
