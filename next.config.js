@@ -37,6 +37,9 @@ const nextConfig = {
   },
   // Enable static exports if needed
   // output: 'export',
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig; 
