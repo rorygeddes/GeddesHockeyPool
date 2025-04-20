@@ -1,7 +1,20 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { teams } from '@/app/picks/page';
+import { teams } from '@/lib/teams';
+import type { Team } from '@/lib/teams';
+
+interface TransformedMatchup {
+  id: string;
+  homeTeam: Team;
+  awayTeam: Team;
+  round: number;
+  picks: {
+    userName: string;
+    selectedTeam: Team;
+    games: number;
+  }[];
+}
 
 export async function GET() {
   try {
@@ -31,13 +44,13 @@ export async function GET() {
     if (matchupsError) throw matchupsError;
 
     // Transform the data to match our frontend types
-    const transformedMatchups = matchupsData.map((matchup) => ({
+    const transformedMatchups: TransformedMatchup[] = matchupsData.map((matchup) => ({
       id: matchup.id,
       homeTeam: teams[matchup.home_team_id],
       awayTeam: teams[matchup.away_team_id],
       round: matchup.round,
       picks: matchup.picks.map((pick) => ({
-        userName: pick.users.name,
+        userName: pick.users.name || 'Unknown User',
         selectedTeam: teams[pick.selected_team_id],
         games: pick.games,
       })),

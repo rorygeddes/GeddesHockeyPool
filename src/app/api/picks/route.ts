@@ -2,6 +2,15 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+interface Pick {
+  teamId: string;
+  games: number;
+}
+
+interface PicksPayload {
+  picks: Record<string, Pick>;
+}
+
 export async function POST(request: Request) {
   try {
     const cookieStore = cookies();
@@ -18,13 +27,13 @@ export async function POST(request: Request) {
     }
 
     // Parse request body
-    const { picks } = await request.json();
+    const { picks } = await request.json() as PicksPayload;
     if (!picks || Object.keys(picks).length === 0) {
       return NextResponse.json({ error: 'No picks provided' }, { status: 400 });
     }
 
     // Format picks for insertion
-    const picksToInsert = Object.entries(picks).map(([matchupId, pick]: [string, any]) => ({
+    const picksToInsert = Object.entries(picks).map(([matchupId, pick]) => ({
       user_id: user.id,
       matchup_id: matchupId,
       selected_team_id: pick.teamId,
@@ -55,7 +64,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
