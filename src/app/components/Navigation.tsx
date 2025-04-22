@@ -9,7 +9,7 @@ export default function Navigation() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="bg-gray-800">
+    <nav className="bg-indigo-600">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -22,8 +22,8 @@ export default function Navigation() {
                   href="/"
                   className={`${
                     isActive('/') 
-                      ? 'bg-gray-900 text-white' 
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-indigo-700 text-white' 
+                      : 'text-white hover:bg-indigo-500 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
                   Dashboard
@@ -32,8 +32,8 @@ export default function Navigation() {
                   href="/teams"
                   className={`${
                     isActive('/teams') 
-                      ? 'bg-gray-900 text-white' 
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-indigo-700 text-white' 
+                      : 'text-white hover:bg-indigo-500 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
                   Teams
@@ -42,8 +42,8 @@ export default function Navigation() {
                   href="/playoff-bracket"
                   className={`${
                     isActive('/playoff-bracket') 
-                      ? 'bg-gray-900 text-white' 
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-indigo-700 text-white' 
+                      : 'text-white hover:bg-indigo-500 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
                   Playoff Bracket
@@ -52,8 +52,8 @@ export default function Navigation() {
                   href="/leaderboard"
                   className={`${
                     isActive('/leaderboard') 
-                      ? 'bg-gray-900 text-white' 
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-indigo-700 text-white' 
+                      : 'text-white hover:bg-indigo-500 hover:text-white'
                   } px-3 py-2 rounded-md text-sm font-medium`}
                 >
                   Leaderboard
