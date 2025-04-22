@@ -6,7 +6,7 @@ import Navigation from "./components/Navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Geddes Hockey Pool",
+  title: "Geddes Hockey Pool 2025",
   description: "NHL Playoff Pool",
 };
 

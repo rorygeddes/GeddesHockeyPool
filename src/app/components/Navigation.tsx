@@ -17,9 +17,9 @@ export default function Navigation() {
           <div className="flex">
             <Link 
               href="/" 
-              className="flex items-center px-2 text-gray-900 font-bold"
+              className="flex items-center px-2 text-gray-900 font-bold text-sm sm:text-base"
             >
-              Hockey Pool
+              Geddes Hockey Pool 2025
             </Link>
           </div>
 

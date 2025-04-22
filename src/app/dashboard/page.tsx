@@ -20,7 +20,7 @@ interface Matchup {
 const teamColors: { [key: string]: { primary: string; secondary: string } } = {
   'Toronto Maple Leafs': { primary: '#00205B', secondary: '#FFFFFF' },
   'Ottawa Senators': { primary: '#C52032', secondary: '#000000' },
-  'Tampa Bay Lightning': { primary: '#002868', secondary: '#FFFFFF' },
+  'Tampa Bay': { primary: '#002868', secondary: '#FFFFFF' },
   'Florida Panthers': { primary: '#C8102E', secondary: '#041E42' },
   'Washington Capitals': { primary: '#C8102E', secondary: '#041E42' },
   'Montreal Canadiens': { primary: '#AF1E2D', secondary: '#192168' },
@@ -30,7 +30,7 @@ const teamColors: { [key: string]: { primary: string; secondary: string } } = {
   'St. Louis Blues': { primary: '#002F87', secondary: '#FCB514' },
   'Dallas Stars': { primary: '#006847', secondary: '#8F8F8C' },
   'Colorado Avalanche': { primary: '#6F263D', secondary: '#236192' },
-  'Vegas Golden Knights': { primary: '#B4975A', secondary: '#333F42' },
+  'Vegas': { primary: '#B4975A', secondary: '#333F42' },
   'Minnesota Wild': { primary: '#A6192E', secondary: '#154734' },
   'Los Angeles Kings': { primary: '#111111', secondary: '#A2AAAD' },
   'Edmonton Oilers': { primary: '#041E42', secondary: '#FF4C00' }
@@ -38,12 +38,12 @@ const teamColors: { [key: string]: { primary: string; secondary: string } } = {
 
 const matchups: Matchup[] = [
   { id: 'TOR-OTT', homeTeam: 'Toronto Maple Leafs', awayTeam: 'Ottawa Senators', conference: 'Eastern' },
-  { id: 'TBL-FLA', homeTeam: 'Tampa Bay Lightning', awayTeam: 'Florida Panthers', conference: 'Eastern' },
+  { id: 'TBL-FLA', homeTeam: 'Tampa Bay', awayTeam: 'Florida Panthers', conference: 'Eastern' },
   { id: 'WSH-MTL', homeTeam: 'Washington Capitals', awayTeam: 'Montreal Canadiens', conference: 'Eastern' },
   { id: 'CAR-NJD', homeTeam: 'Carolina Hurricanes', awayTeam: 'New Jersey Devils', conference: 'Eastern' },
   { id: 'WPG-STL', homeTeam: 'Winnipeg Jets', awayTeam: 'St. Louis Blues', conference: 'Western' },
   { id: 'DAL-COL', homeTeam: 'Dallas Stars', awayTeam: 'Colorado Avalanche', conference: 'Western' },
-  { id: 'VGS-MIN', homeTeam: 'Vegas Golden Knights', awayTeam: 'Minnesota Wild', conference: 'Western' },
+  { id: 'VGS-MIN', homeTeam: 'Vegas', awayTeam: 'Minnesota Wild', conference: 'Western' },
   { id: 'LA-EDM', homeTeam: 'Los Angeles Kings', awayTeam: 'Edmonton Oilers', conference: 'Western' }
 ];
 
@@ -278,7 +278,7 @@ export default function DashboardPage() {
     const abbreviations: { [key: string]: string } = {
       'Toronto Maple Leafs': 'TOR',
       'Ottawa Senators': 'OTT',
-      'Tampa Bay Lightning': 'TBL',
+      'Tampa Bay': 'TBL',
       'Florida Panthers': 'FLA',
       'Washington Capitals': 'WSH',
       'Montreal Canadiens': 'MTL',
@@ -288,7 +288,7 @@ export default function DashboardPage() {
       'St. Louis Blues': 'STL',
       'Dallas Stars': 'DAL',
       'Colorado Avalanche': 'COL',
-      'Vegas Golden Knights': 'VGK',
+      'Vegas': 'VGK',
       'Minnesota Wild': 'MIN',
       'Los Angeles Kings': 'LAK',
       'Edmonton Oilers': 'EDM'
@@ -312,7 +312,7 @@ export default function DashboardPage() {
     const teamNames: { [key: string]: string } = {
       'TOR': 'Toronto Maple Leafs',
       'OTT': 'Ottawa Senators',
-      'TBL': 'Tampa Bay Lightning',
+      'TBL': 'Tampa Bay',
       'FLA': 'Florida Panthers',
       'WSH': 'Washington Capitals',
       'MTL': 'Montreal Canadiens',
@@ -322,8 +322,8 @@ export default function DashboardPage() {
       'STL': 'St. Louis Blues',
       'DAL': 'Dallas Stars',
       'COL': 'Colorado Avalanche',
-      'VGK': 'Vegas Golden Knights',
-      'VGS': 'Vegas Golden Knights', // For backward compatibility
+      'VGK': 'Vegas',
+      'VGS': 'Vegas', // For backward compatibility
       'MIN': 'Minnesota Wild',
       'LAK': 'Los Angeles Kings',
       'LA': 'Los Angeles Kings',  // For backward compatibility
