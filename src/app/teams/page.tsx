@@ -25,7 +25,7 @@ const teamMembers = [
       { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'DAL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 7, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -38,7 +38,7 @@ const teamMembers = [
       { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -51,7 +51,7 @@ const teamMembers = [
       { team: 'CAR', games: 4, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
     ]
   },
@@ -64,7 +64,7 @@ const teamMembers = [
       { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'COL', games: 5, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -77,8 +77,8 @@ const teamMembers = [
       { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'LA', games: 6, matchupId: 'LA-EDM' }
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'LAK', games: 6, matchupId: 'LA-EDM' }
     ]
   },
   {
@@ -103,7 +103,7 @@ const teamMembers = [
       { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 7, matchupId: 'WPG-STL' },
       { team: 'COL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -116,7 +116,7 @@ const teamMembers = [
       { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -129,7 +129,7 @@ const teamMembers = [
       { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
       { team: 'DAL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -142,8 +142,8 @@ const teamMembers = [
       { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'LA', games: 6, matchupId: 'LA-EDM' }
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'LAK', games: 6, matchupId: 'LA-EDM' }
     ]
   },
   {
@@ -155,7 +155,7 @@ const teamMembers = [
       { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 4, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 6, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -168,8 +168,8 @@ const teamMembers = [
       { team: 'CAR', games: 4, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 7, matchupId: 'VGS-MIN' },
-      { team: 'LA', games: 7, matchupId: 'LA-EDM' }
+      { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
+      { team: 'LAK', games: 7, matchupId: 'LA-EDM' }
     ]
   },
   {
@@ -181,8 +181,8 @@ const teamMembers = [
       { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
       { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 7, matchupId: 'VGS-MIN' },
-      { team: 'LA', games: 5, matchupId: 'LA-EDM' }
+      { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
+      { team: 'LAK', games: 5, matchupId: 'LA-EDM' }
     ]
   },
   {
@@ -194,7 +194,7 @@ const teamMembers = [
       { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
       { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
     ]
   },
@@ -207,7 +207,7 @@ const teamMembers = [
       { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
       { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
       { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
     ]
   },
@@ -220,8 +220,8 @@ const teamMembers = [
       { team: 'NJD', games: 7, matchupId: 'CAR-NJD' },
       { team: 'STL', games: 6, matchupId: 'WPG-STL' },
       { team: 'COL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'LA', games: 7, matchupId: 'LA-EDM' }
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'LAK', games: 7, matchupId: 'LA-EDM' }
     ]
   },
   {
@@ -290,7 +290,6 @@ const getFullTeamName = (abbreviation: string): string => {
     'VGK': 'Vegas Golden Knights',
     'MIN': 'Minnesota Wild',
     'LAK': 'Los Angeles Kings',
-    'LA': 'Los Angeles Kings',  // For backward compatibility
     'EDM': 'Edmonton Oilers'
   };
   return teamNames[abbreviation] || abbreviation;
