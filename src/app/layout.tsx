@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Geddes Hockey Pool",
-  description: "NHL Playoff Pool for the Geddes Family",
+  description: "NHL Playoff Pool",
 };
 
 export default function RootLayout({
@@ -16,10 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-gray-100`}>
+    <html lang="en" className="light">
+      <body className={`${inter.className} min-h-screen bg-gray-200`}>
         <Navigation />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main>
           {children}
         </main>
       </body>
