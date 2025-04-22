@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { teams } from '@/lib/teams';
 
@@ -222,6 +223,19 @@ const teamMembers = [
       { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
       { team: 'LA', games: 7, matchupId: 'LA-EDM' }
     ]
+  },
+  {
+    name: 'Bird',
+    picks: [
+      { team: 'TOR', games: 5, matchupId: 'TOR-OTT' },
+      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'EDM', games: 6, matchupId: 'LA-EDM' },
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+      { team: 'COL', games: 5, matchupId: 'DAL-COL' }
+    ]
   }
 ];
 
@@ -239,9 +253,9 @@ const getTeamAbbreviation = (teamName: string): string => {
     'St. Louis Blues': 'STL',
     'Dallas Stars': 'DAL',
     'Colorado Avalanche': 'COL',
-    'Vegas Golden Knights': 'VGS',
+    'Vegas Golden Knights': 'VGK',
     'Minnesota Wild': 'MIN',
-    'Los Angeles Kings': 'LA',
+    'Los Angeles Kings': 'LAK',
     'Edmonton Oilers': 'EDM'
   };
   return abbreviations[teamName] || '';
@@ -273,43 +287,69 @@ const getFullTeamName = (abbreviation: string): string => {
     'STL': 'St. Louis Blues',
     'DAL': 'Dallas Stars',
     'COL': 'Colorado Avalanche',
-    'VGS': 'Vegas Golden Knights',
+    'VGK': 'Vegas Golden Knights',
     'MIN': 'Minnesota Wild',
-    'LA': 'Los Angeles Kings',
+    'LAK': 'Los Angeles Kings',
+    'LA': 'Los Angeles Kings',  // For backward compatibility
     'EDM': 'Edmonton Oilers'
   };
   return teamNames[abbreviation] || abbreviation;
 };
 
 export default function TeamsPage() {
+  const [expandedMember, setExpandedMember] = useState<string | null>(null);
+
+  const toggleMember = (memberName: string) => {
+    setExpandedMember(expandedMember === memberName ? null : memberName);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Team Members & Picks</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {teamMembers.map((member) => (
-            <div key={member.name} className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">{member.name}</h2>
-              <div className="space-y-3">
-                {member.picks.map((pick, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-50 rounded-lg p-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="relative w-8 h-8 bg-white rounded-full p-1">
-                        <Image
-                          src={getTeamLogo(getFullTeamName(pick.team))}
-                          alt={pick.team}
-                          fill
-                          className="object-contain"
-                        />
+            <div key={member.name} className="bg-white rounded-lg shadow overflow-hidden">
+              <button
+                onClick={() => toggleMember(member.name)}
+                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              >
+                <h2 className="text-xl font-semibold text-gray-900">{member.name}</h2>
+                <svg
+                  className={`w-5 h-5 text-gray-500 transform transition-transform ${
+                    expandedMember === member.name ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {expandedMember === member.name && (
+                <div className="px-6 pb-4">
+                  <div className="space-y-3">
+                    {member.picks.map((pick, index) => (
+                      <div key={index} className="flex items-center justify-between bg-gray-50 rounded-lg p-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="relative w-8 h-8 bg-white rounded-full p-1">
+                            <Image
+                              src={getTeamLogo(getFullTeamName(pick.team))}
+                              alt={pick.team}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-900">
+                            {getFullTeamName(pick.team)}
+                          </span>
+                        </div>
+                        <span className="text-sm text-gray-600">in {pick.games}</span>
                       </div>
-                      <span className="text-sm font-medium text-gray-900">
-                        {getFullTeamName(pick.team)}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-600">in {pick.games}</span>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
