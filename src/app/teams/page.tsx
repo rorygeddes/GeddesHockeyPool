@@ -15,7 +15,7 @@ interface TeamMember {
   picks: Pick[];
 }
 
-const teamMembers = [
+const teamMembers: TeamMember[] = [
   {
     name: 'GMA',
     picks: [
