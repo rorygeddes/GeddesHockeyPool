@@ -17,6 +17,25 @@ interface Matchup {
   conference: 'Eastern' | 'Western';
 }
 
+const teamColors: { [key: string]: { primary: string; secondary: string } } = {
+  'Toronto Maple Leafs': { primary: '#00205B', secondary: '#FFFFFF' },
+  'Ottawa Senators': { primary: '#C52032', secondary: '#000000' },
+  'Tampa Bay Lightning': { primary: '#002868', secondary: '#FFFFFF' },
+  'Florida Panthers': { primary: '#C8102E', secondary: '#041E42' },
+  'Washington Capitals': { primary: '#C8102E', secondary: '#041E42' },
+  'Montreal Canadiens': { primary: '#AF1E2D', secondary: '#192168' },
+  'Carolina Hurricanes': { primary: '#CC0000', secondary: '#000000' },
+  'New Jersey Devils': { primary: '#CE1126', secondary: '#000000' },
+  'Winnipeg Jets': { primary: '#041E42', secondary: '#004C97' },
+  'St. Louis Blues': { primary: '#002F87', secondary: '#FCB514' },
+  'Dallas Stars': { primary: '#006847', secondary: '#8F8F8C' },
+  'Colorado Avalanche': { primary: '#6F263D', secondary: '#236192' },
+  'Vegas Golden Knights': { primary: '#B4975A', secondary: '#333F42' },
+  'Minnesota Wild': { primary: '#A6192E', secondary: '#154734' },
+  'Los Angeles Kings': { primary: '#111111', secondary: '#A2AAAD' },
+  'Edmonton Oilers': { primary: '#041E42', secondary: '#FF4C00' }
+};
+
 const matchups: Matchup[] = [
   { id: 'TOR-OTT', homeTeam: 'Toronto Maple Leafs', awayTeam: 'Ottawa Senators', conference: 'Eastern' },
   { id: 'TBL-FLA', homeTeam: 'Tampa Bay Lightning', awayTeam: 'Florida Panthers', conference: 'Eastern' },
@@ -236,6 +255,19 @@ const teamMembers = [
       { team: 'VGS', games: 5, matchupId: 'VGS-MIN' },
       { team: 'LA', games: 7, matchupId: 'LA-EDM' }
     ]
+  },
+  {
+    name: 'Bird',
+    picks: [
+      { team: 'TOR', games: 5, matchupId: 'TOR-OTT' },
+      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+      { team: 'EDM', games: 6, matchupId: 'LA-EDM' },
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'COL', games: 5, matchupId: 'DAL-COL' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' }
+    ]
   }
 ];
 
@@ -314,89 +346,90 @@ export default function DashboardPage() {
       }));
   };
 
-  const renderPicks = (matchupId: string) => {
-    const picks = getPicksForMatchup(matchupId);
-    
-    if (picks.length === 0) {
-      return <p className="text-gray-500 text-sm italic mt-2">No picks submitted yet</p>;
-    }
-
-    return (
-      <div className="mt-4 space-y-2">
-        {picks.map((pick, index) => (
-          <div 
-            key={index} 
-            className="flex items-center justify-between text-sm p-2 rounded bg-gray-50"
-          >
-            <span className="font-medium">{pick.name}</span>
-            <div className="flex items-center space-x-2">
-              <div className="relative w-6 h-6">
-                <Image
-                  src={getTeamLogo(getFullTeamName(pick.selectedTeam))}
-                  alt={pick.selectedTeam}
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <span className="text-gray-500">in {pick.games}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+  const getMatchupGradient = (homeTeam: string, awayTeam: string) => {
+    const home = teamColors[homeTeam];
+    const away = teamColors[awayTeam];
+    return `linear-gradient(135deg, ${home.primary}22 0%, ${home.secondary}22 25%, ${away.primary}22 75%, ${away.secondary}22 100%)`;
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="border-b border-gray-200 pb-5">
-          <h1 className="text-3xl font-bold text-gray-900">Playoff Picks Dashboard</h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
+        <div className="border-b border-gray-200 pb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Playoff Picks Dashboard</h1>
           <p className="mt-2 text-sm text-gray-500">
-            Click on a matchup to view all picks. Click again to collapse.
+            Tap a matchup to view all picks. Tap again to collapse.
           </p>
         </div>
 
-        <div className="mt-8 space-y-8">
+        <div className="mt-6 space-y-6">
           {/* Eastern Conference */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Eastern Conference</h2>
-            <div className="space-y-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Eastern Conference</h2>
+            <div className="space-y-3">
               {matchups
                 .filter(matchup => matchup.conference === 'Eastern')
                 .map((matchup) => (
                   <div 
                     key={matchup.id} 
-                    className={`bg-white rounded-lg shadow p-6 cursor-pointer transition-all duration-200 ${
-                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-lg'
+                    className={`rounded-lg shadow-sm transition-all duration-200 overflow-hidden ${
+                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-md'
                     }`}
+                    style={{
+                      background: getMatchupGradient(matchup.homeTeam, matchup.awayTeam)
+                    }}
                     onClick={() => setSelectedMatchup(selectedMatchup === matchup.id ? null : matchup.id)}
                   >
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center space-x-3">
-                        <div className="relative w-10 h-10">
-                          <Image
-                            src={getTeamLogo(matchup.homeTeam)}
-                            alt={matchup.homeTeam}
-                            fill
-                            className="object-contain"
-                          />
+                    <div className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
+                            <Image
+                              src={getTeamLogo(matchup.homeTeam)}
+                              alt={matchup.homeTeam}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.homeTeam}</span>
                         </div>
-                        <span className="font-medium">{matchup.homeTeam}</span>
-                      </div>
-                      <span className="text-gray-500">vs</span>
-                      <div className="flex items-center space-x-3">
-                        <span className="font-medium">{matchup.awayTeam}</span>
-                        <div className="relative w-10 h-10">
-                          <Image
-                            src={getTeamLogo(matchup.awayTeam)}
-                            alt={matchup.awayTeam}
-                            fill
-                            className="object-contain"
-                          />
+                        <span className="text-sm font-medium text-gray-600">vs</span>
+                        <div className="flex items-center space-x-3">
+                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.awayTeam}</span>
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
+                            <Image
+                              src={getTeamLogo(matchup.awayTeam)}
+                              alt={matchup.awayTeam}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
                       </div>
+                      {selectedMatchup === matchup.id && (
+                        <div className="mt-4 space-y-2 bg-white/90 rounded-md p-3">
+                          {getPicksForMatchup(matchup.id).map((pick, index) => (
+                            <div 
+                              key={index} 
+                              className="flex items-center justify-between text-sm p-2 rounded bg-white/80"
+                            >
+                              <span className="font-medium">{pick.name}</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="relative w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full p-0.5">
+                                  <Image
+                                    src={getTeamLogo(getFullTeamName(pick.selectedTeam))}
+                                    alt={pick.selectedTeam}
+                                    fill
+                                    className="object-contain"
+                                  />
+                                </div>
+                                <span className="text-gray-600">in {pick.games}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    {selectedMatchup === matchup.id && renderPicks(matchup.id)}
                   </div>
                 ))}
             </div>
@@ -404,44 +437,71 @@ export default function DashboardPage() {
 
           {/* Western Conference */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Western Conference</h2>
-            <div className="space-y-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Western Conference</h2>
+            <div className="space-y-3">
               {matchups
                 .filter(matchup => matchup.conference === 'Western')
                 .map((matchup) => (
                   <div 
                     key={matchup.id} 
-                    className={`bg-white rounded-lg shadow p-6 cursor-pointer transition-all duration-200 ${
-                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-lg'
+                    className={`rounded-lg shadow-sm transition-all duration-200 overflow-hidden ${
+                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-md'
                     }`}
+                    style={{
+                      background: getMatchupGradient(matchup.homeTeam, matchup.awayTeam)
+                    }}
                     onClick={() => setSelectedMatchup(selectedMatchup === matchup.id ? null : matchup.id)}
                   >
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center space-x-3">
-                        <div className="relative w-10 h-10">
-                          <Image
-                            src={getTeamLogo(matchup.homeTeam)}
-                            alt={matchup.homeTeam}
-                            fill
-                            className="object-contain"
-                          />
+                    <div className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
+                            <Image
+                              src={getTeamLogo(matchup.homeTeam)}
+                              alt={matchup.homeTeam}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.homeTeam}</span>
                         </div>
-                        <span className="font-medium">{matchup.homeTeam}</span>
-                      </div>
-                      <span className="text-gray-500">vs</span>
-                      <div className="flex items-center space-x-3">
-                        <span className="font-medium">{matchup.awayTeam}</span>
-                        <div className="relative w-10 h-10">
-                          <Image
-                            src={getTeamLogo(matchup.awayTeam)}
-                            alt={matchup.awayTeam}
-                            fill
-                            className="object-contain"
-                          />
+                        <span className="text-sm font-medium text-gray-600">vs</span>
+                        <div className="flex items-center space-x-3">
+                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.awayTeam}</span>
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
+                            <Image
+                              src={getTeamLogo(matchup.awayTeam)}
+                              alt={matchup.awayTeam}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
                       </div>
+                      {selectedMatchup === matchup.id && (
+                        <div className="mt-4 space-y-2 bg-white/90 rounded-md p-3">
+                          {getPicksForMatchup(matchup.id).map((pick, index) => (
+                            <div 
+                              key={index} 
+                              className="flex items-center justify-between text-sm p-2 rounded bg-white/80"
+                            >
+                              <span className="font-medium">{pick.name}</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="relative w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full p-0.5">
+                                  <Image
+                                    src={getTeamLogo(getFullTeamName(pick.selectedTeam))}
+                                    alt={pick.selectedTeam}
+                                    fill
+                                    className="object-contain"
+                                  />
+                                </div>
+                                <span className="text-gray-600">in {pick.games}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    {selectedMatchup === matchup.id && renderPicks(matchup.id)}
                   </div>
                 ))}
             </div>
