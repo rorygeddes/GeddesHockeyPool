@@ -16,8 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="light">
-      <body className={`${inter.className} min-h-screen bg-gray-200`}>
+    <html lang="en" className="light" style={{ colorScheme: 'light' }}>
+      <head>
+        <meta name="color-scheme" content="light" />
+      </head>
+      <body className={`${inter.className} min-h-screen bg-gray-200 [color-scheme:light]`} style={{ colorScheme: 'light' }}>
         <Navigation />
         <main>
           {children}
