@@ -353,7 +353,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
         <div className="border-b border-gray-200 pb-4">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Playoff Picks Dashboard</h1>
@@ -393,7 +393,7 @@ export default function DashboardPage() {
                           </div>
                           <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.homeTeam}</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-300">vs</span>
+                        <span className="text-sm font-medium text-black">vs</span>
                         <div className="flex items-center space-x-3">
                           <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.awayTeam}</span>
                           <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
