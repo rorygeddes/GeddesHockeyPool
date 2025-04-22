@@ -260,13 +260,13 @@ const teamMembers = [
     name: 'Bird',
     picks: [
       { team: 'TOR', games: 5, matchupId: 'TOR-OTT' },
-      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
       { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
       { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'EDM', games: 6, matchupId: 'LA-EDM' },
-      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
       { team: 'COL', games: 5, matchupId: 'DAL-COL' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' }
+      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+      { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
     ]
   }
 ];
@@ -349,15 +349,15 @@ export default function DashboardPage() {
   const getMatchupGradient = (homeTeam: string, awayTeam: string) => {
     const home = teamColors[homeTeam];
     const away = teamColors[awayTeam];
-    return `linear-gradient(135deg, ${home.primary}22 0%, ${home.secondary}22 25%, ${away.primary}22 75%, ${away.secondary}22 100%)`;
+    return `linear-gradient(135deg, ${home.primary}55 0%, ${home.secondary}44 25%, ${away.primary}55 75%, ${away.secondary}44 100%)`;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
-        <div className="border-b border-gray-200 pb-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Playoff Picks Dashboard</h1>
-          <p className="mt-2 text-sm text-gray-500">
+        <div className="border-b border-gray-700 pb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Playoff Picks Dashboard</h1>
+          <p className="mt-2 text-sm text-gray-400">
             Tap a matchup to view all picks. Tap again to collapse.
           </p>
         </div>
@@ -365,7 +365,7 @@ export default function DashboardPage() {
         <div className="mt-6 space-y-6">
           {/* Eastern Conference */}
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Eastern Conference</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Eastern Conference</h2>
             <div className="space-y-3">
               {matchups
                 .filter(matchup => matchup.conference === 'Eastern')
@@ -391,11 +391,11 @@ export default function DashboardPage() {
                               className="object-contain"
                             />
                           </div>
-                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.homeTeam}</span>
+                          <span className="font-medium text-sm sm:text-base text-white">{matchup.homeTeam}</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-600">vs</span>
+                        <span className="text-sm font-medium text-gray-300">vs</span>
                         <div className="flex items-center space-x-3">
-                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.awayTeam}</span>
+                          <span className="font-medium text-sm sm:text-base text-white">{matchup.awayTeam}</span>
                           <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
                             <Image
                               src={getTeamLogo(matchup.awayTeam)}
@@ -407,13 +407,13 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {selectedMatchup === matchup.id && (
-                        <div className="mt-4 space-y-2 bg-white/90 rounded-md p-3">
+                        <div className="mt-4 space-y-2 bg-black/40 backdrop-blur-sm rounded-md p-3">
                           {getPicksForMatchup(matchup.id).map((pick, index) => (
                             <div 
                               key={index} 
-                              className="flex items-center justify-between text-sm p-2 rounded bg-white/80"
+                              className="flex items-center justify-between text-sm p-2 rounded bg-black/30"
                             >
-                              <span className="font-medium">{pick.name}</span>
+                              <span className="font-medium text-white">{pick.name}</span>
                               <div className="flex items-center space-x-2">
                                 <div className="relative w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full p-0.5">
                                   <Image
@@ -423,7 +423,7 @@ export default function DashboardPage() {
                                     className="object-contain"
                                   />
                                 </div>
-                                <span className="text-gray-600">in {pick.games}</span>
+                                <span className="text-gray-300">in {pick.games}</span>
                               </div>
                             </div>
                           ))}
@@ -437,7 +437,7 @@ export default function DashboardPage() {
 
           {/* Western Conference */}
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Western Conference</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Western Conference</h2>
             <div className="space-y-3">
               {matchups
                 .filter(matchup => matchup.conference === 'Western')
@@ -463,11 +463,11 @@ export default function DashboardPage() {
                               className="object-contain"
                             />
                           </div>
-                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.homeTeam}</span>
+                          <span className="font-medium text-sm sm:text-base text-white">{matchup.homeTeam}</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-600">vs</span>
+                        <span className="text-sm font-medium text-gray-300">vs</span>
                         <div className="flex items-center space-x-3">
-                          <span className="font-medium text-sm sm:text-base text-gray-900">{matchup.awayTeam}</span>
+                          <span className="font-medium text-sm sm:text-base text-white">{matchup.awayTeam}</span>
                           <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
                             <Image
                               src={getTeamLogo(matchup.awayTeam)}
@@ -479,13 +479,13 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {selectedMatchup === matchup.id && (
-                        <div className="mt-4 space-y-2 bg-white/90 rounded-md p-3">
+                        <div className="mt-4 space-y-2 bg-black/40 backdrop-blur-sm rounded-md p-3">
                           {getPicksForMatchup(matchup.id).map((pick, index) => (
                             <div 
                               key={index} 
-                              className="flex items-center justify-between text-sm p-2 rounded bg-white/80"
+                              className="flex items-center justify-between text-sm p-2 rounded bg-black/30"
                             >
-                              <span className="font-medium">{pick.name}</span>
+                              <span className="font-medium text-white">{pick.name}</span>
                               <div className="flex items-center space-x-2">
                                 <div className="relative w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full p-0.5">
                                   <Image
@@ -495,7 +495,7 @@ export default function DashboardPage() {
                                     className="object-contain"
                                   />
                                 </div>
-                                <span className="text-gray-600">in {pick.games}</span>
+                                <span className="text-gray-300">in {pick.games}</span>
                               </div>
                             </div>
                           ))}
