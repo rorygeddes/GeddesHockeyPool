@@ -373,7 +373,7 @@ export default function DashboardPage() {
                   <div 
                     key={matchup.id} 
                     className={`rounded-lg shadow-sm transition-all duration-200 overflow-hidden ${
-                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-md'
+                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500 dark:ring-indigo-400' : 'hover:shadow-md'
                     }`}
                     style={{
                       background: getMatchupGradient(matchup.homeTeam, matchup.awayTeam)
@@ -383,7 +383,7 @@ export default function DashboardPage() {
                     <div className="p-3 sm:p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2 flex-1 min-w-0">
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.homeTeam)}
                               alt={matchup.homeTeam}
@@ -391,12 +391,12 @@ export default function DashboardPage() {
                               className="object-contain"
                             />
                           </div>
-                          <span className="font-medium text-xs sm:text-sm text-gray-900 truncate">{matchup.homeTeam}</span>
+                          <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate">{matchup.homeTeam}</span>
                         </div>
-                        <span className="text-xs sm:text-sm font-medium text-black px-2 flex-shrink-0">VS</span>
+                        <span className="text-xs sm:text-sm font-medium text-black dark:text-white px-2 flex-shrink-0">VS</span>
                         <div className="flex items-center space-x-2 flex-1 min-w-0 justify-end">
-                          <span className="font-medium text-xs sm:text-sm text-gray-900 truncate text-right">{matchup.awayTeam}</span>
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
+                          <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate text-right">{matchup.awayTeam}</span>
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.awayTeam)}
                               alt={matchup.awayTeam}
@@ -407,7 +407,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {selectedMatchup === matchup.id && (
-                        <div className="mt-3 space-y-2 bg-white/80 backdrop-blur-sm rounded-md p-2 sm:p-3">
+                        <div className="mt-3 space-y-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-md p-2 sm:p-3">
                           {getPicksForMatchup(matchup.id).map((pick, index) => (
                             <div 
                               key={index} 
@@ -445,7 +445,7 @@ export default function DashboardPage() {
                   <div 
                     key={matchup.id} 
                     className={`rounded-lg shadow-sm transition-all duration-200 overflow-hidden ${
-                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500' : 'hover:shadow-md'
+                      selectedMatchup === matchup.id ? 'ring-2 ring-indigo-500 dark:ring-indigo-400' : 'hover:shadow-md'
                     }`}
                     style={{
                       background: getMatchupGradient(matchup.homeTeam, matchup.awayTeam)
@@ -455,7 +455,7 @@ export default function DashboardPage() {
                     <div className="p-3 sm:p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2 flex-1 min-w-0">
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.homeTeam)}
                               alt={matchup.homeTeam}
@@ -463,12 +463,12 @@ export default function DashboardPage() {
                               className="object-contain"
                             />
                           </div>
-                          <span className="font-medium text-xs sm:text-sm text-gray-900 truncate">{matchup.homeTeam}</span>
+                          <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate">{matchup.homeTeam}</span>
                         </div>
-                        <span className="text-xs sm:text-sm font-medium text-black px-2 flex-shrink-0">VS</span>
+                        <span className="text-xs sm:text-sm font-medium text-black dark:text-white px-2 flex-shrink-0">VS</span>
                         <div className="flex items-center space-x-2 flex-1 min-w-0 justify-end">
-                          <span className="font-medium text-xs sm:text-sm text-gray-900 truncate text-right">{matchup.awayTeam}</span>
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
+                          <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate text-right">{matchup.awayTeam}</span>
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.awayTeam)}
                               alt={matchup.awayTeam}
@@ -479,7 +479,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {selectedMatchup === matchup.id && (
-                        <div className="mt-3 space-y-2 bg-white/80 backdrop-blur-sm rounded-md p-2 sm:p-3">
+                        <div className="mt-3 space-y-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-md p-2 sm:p-3">
                           {getPicksForMatchup(matchup.id).map((pick, index) => (
                             <div 
                               key={index} 

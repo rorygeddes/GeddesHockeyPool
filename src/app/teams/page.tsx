@@ -305,17 +305,17 @@ export default function TeamsPage() {
   return (
     <div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Team Members & Picks</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Team Members & Picks</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {teamMembers.map((member) => (
-            <div key={member.name} className="bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg shadow-md overflow-hidden">
+            <div key={member.name} className="bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800 rounded-lg shadow-md overflow-hidden">
               <button
                 onClick={() => toggleMember(member.name)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-400/30 transition-colors"
+                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-400/30 dark:hover:bg-gray-600/30 transition-colors"
               >
-                <h2 className="text-xl font-semibold text-gray-900">{member.name}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{member.name}</h2>
                 <svg
-                  className={`w-5 h-5 text-gray-700 transform transition-transform ${
+                  className={`w-5 h-5 text-gray-700 dark:text-gray-300 transform transition-transform ${
                     expandedMember === member.name ? 'rotate-180' : ''
                   }`}
                   fill="none"
