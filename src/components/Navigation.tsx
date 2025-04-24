@@ -11,6 +11,7 @@ const Navigation = () => {
   };
 
   const menuItems = [
+    { href: '/', label: 'Home' },
     { href: '/matchups', label: 'Matchups' },
     { href: '/teams', label: 'Teams' },
     { href: '/leaderboard', label: 'Leaderboard' },
@@ -22,14 +23,14 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-              GMA Pool
+            <Link href="/" className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+              GMA Geddes Hockey Pool
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-4">
-            {menuItems.map((item) => (
+            {menuItems.slice(1).map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

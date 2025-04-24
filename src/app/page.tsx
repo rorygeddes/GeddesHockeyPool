@@ -4,8 +4,8 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen py-4 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-4 sm:py-8 flex flex-col">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow">
         <div className="text-center">
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-4">
             Welcome to the 2025 Annual GMA Geddes Hockey Pool!
@@ -69,6 +69,11 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="mt-8 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+        <p>Made by rorygeddes © 2025</p>
+      </footer>
     </div>
   );
 }
