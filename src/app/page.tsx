@@ -47,10 +47,16 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Latest Updates</h2>
           <div className="space-y-4">
             <div className="border-l-4 border-blue-500 pl-4">
-              <p className="text-gray-600 dark:text-gray-400">Round 1 playoff picks are now live!</p>
+              <p className="text-gray-600 dark:text-gray-400">GMA looking to go back to back</p>
             </div>
             <div className="border-l-4 border-green-500 pl-4">
-              <p className="text-gray-600 dark:text-gray-400">GMA leads the pool with 18 points</p>
+              <p className="text-gray-600 dark:text-gray-400">Sens favoured game 3</p>
+            </div>
+            <div className="border-l-4 border-yellow-500 pl-4">
+              <p className="text-gray-600 dark:text-gray-400">Grant looking to not come last for the third straight year</p>
+            </div>
+            <div className="border-l-4 border-red-500 pl-4">
+              <p className="text-gray-600 dark:text-gray-400">Will Oil finally fall to the Kings???</p>
             </div>
           </div>
         </div>
