@@ -355,9 +355,9 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
-        <div className="border-b border-gray-200 pb-4">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Playoff Picks Dashboard</h1>
-          <p className="mt-2 text-xs sm:text-sm text-gray-500">
+        <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Playoff Picks Dashboard</h1>
+          <p className="mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
             Tap a matchup to view all picks. Tap again to collapse.
           </p>
         </div>
@@ -365,7 +365,7 @@ export default function DashboardPage() {
         <div className="mt-4 space-y-4 sm:space-y-6">
           {/* Eastern Conference */}
           <div>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">Eastern Conference</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">Eastern Conference</h2>
             <div className="space-y-2 sm:space-y-3">
               {matchups
                 .filter(matchup => matchup.conference === 'Eastern')
@@ -383,7 +383,7 @@ export default function DashboardPage() {
                     <div className="p-3 sm:p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2 flex-1 min-w-0">
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.homeTeam)}
                               alt={matchup.homeTeam}
@@ -396,7 +396,7 @@ export default function DashboardPage() {
                         <span className="text-xs sm:text-sm font-medium text-black dark:text-white px-2 flex-shrink-0">VS</span>
                         <div className="flex items-center space-x-2 flex-1 min-w-0 justify-end">
                           <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate text-right">{matchup.awayTeam}</span>
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.awayTeam)}
                               alt={matchup.awayTeam}
@@ -437,7 +437,7 @@ export default function DashboardPage() {
 
           {/* Western Conference */}
           <div>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">Western Conference</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">Western Conference</h2>
             <div className="space-y-2 sm:space-y-3">
               {matchups
                 .filter(matchup => matchup.conference === 'Western')
@@ -455,7 +455,7 @@ export default function DashboardPage() {
                     <div className="p-3 sm:p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2 flex-1 min-w-0">
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.homeTeam)}
                               alt={matchup.homeTeam}
@@ -468,7 +468,7 @@ export default function DashboardPage() {
                         <span className="text-xs sm:text-sm font-medium text-black dark:text-white px-2 flex-shrink-0">VS</span>
                         <div className="flex items-center space-x-2 flex-1 min-w-0 justify-end">
                           <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate text-right">{matchup.awayTeam}</span>
-                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-gray-800 rounded-full p-1 flex-shrink-0">
+                          <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
                             <Image
                               src={getTeamLogo(matchup.awayTeam)}
                               alt={matchup.awayTeam}
