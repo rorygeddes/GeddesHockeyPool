@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { teams } from '@/lib/teams';
@@ -296,71 +296,78 @@ const getFullTeamName = (abbreviation: string): string => {
   return teamNames[abbreviation] || abbreviation;
 };
 
-export default function TeamsPage() {
-  const [expandedMember, setExpandedMember] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const member = searchParams.get('member');
-    if (member) {
-      setExpandedMember(member);
-    }
-  }, [searchParams]);
+function TeamsList({ initialExpandedMember }: { initialExpandedMember: string | null }) {
+  const [expandedMember, setExpandedMember] = useState<string | null>(initialExpandedMember);
 
   const toggleMember = (memberName: string) => {
     setExpandedMember(expandedMember === memberName ? null : memberName);
   };
 
   return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {teamMembers.map((member) => (
+        <div key={member.name} className="bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800 rounded-lg shadow-md overflow-hidden">
+          <button
+            onClick={() => toggleMember(member.name)}
+            className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-400/30 dark:hover:bg-gray-600/30 transition-colors"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{member.name}</h2>
+            <svg
+              className={`w-5 h-5 text-gray-700 dark:text-gray-300 transform transition-transform ${
+                expandedMember === member.name ? 'rotate-180' : ''
+              }`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {expandedMember === member.name && (
+            <div className="px-6 pb-4">
+              <div className="space-y-3">
+                {member.picks.map((pick, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-200/70 backdrop-blur-sm rounded-lg p-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="relative w-8 h-8 bg-white rounded-full p-1">
+                        <Image
+                          src={getTeamLogo(getFullTeamName(pick.team))}
+                          alt={pick.team}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">
+                        {getFullTeamName(pick.team)}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-700">in {pick.games}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TeamsContent() {
+  const searchParams = useSearchParams();
+  const member = searchParams.get('member');
+  
+  return <TeamsList initialExpandedMember={member} />;
+}
+
+export default function TeamsPage() {
+  return (
     <div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Team Members & Picks</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {teamMembers.map((member) => (
-            <div key={member.name} className="bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800 rounded-lg shadow-md overflow-hidden">
-              <button
-                onClick={() => toggleMember(member.name)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-400/30 dark:hover:bg-gray-600/30 transition-colors"
-              >
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{member.name}</h2>
-                <svg
-                  className={`w-5 h-5 text-gray-700 dark:text-gray-300 transform transition-transform ${
-                    expandedMember === member.name ? 'rotate-180' : ''
-                  }`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {expandedMember === member.name && (
-                <div className="px-6 pb-4">
-                  <div className="space-y-3">
-                    {member.picks.map((pick, index) => (
-                      <div key={index} className="flex items-center justify-between bg-gray-200/70 backdrop-blur-sm rounded-lg p-3">
-                        <div className="flex items-center space-x-3">
-                          <div className="relative w-8 h-8 bg-white rounded-full p-1">
-                            <Image
-                              src={getTeamLogo(getFullTeamName(pick.team))}
-                              alt={pick.team}
-                              fill
-                              className="object-contain"
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-gray-900">
-                            {getFullTeamName(pick.team)}
-                          </span>
-                        </div>
-                        <span className="text-sm text-gray-700">in {pick.games}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <TeamsContent />
+        </Suspense>
       </div>
     </div>
   );
