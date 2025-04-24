@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 interface LeaderboardEntry {
   rank: number;
   name: string;
@@ -49,11 +51,11 @@ export default function LeaderboardPage() {
   return (
     <div className="min-h-screen py-4">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Leaderboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Leaderboard</h1>
         
         {/* Point System Legend */}
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 mb-4 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">Point System</h2>
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-2">Point System</h2>
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -83,20 +85,25 @@ export default function LeaderboardPage() {
                   <span className="text-base font-bold text-gray-400 dark:text-gray-500 w-6">
                     {getRankEmoji(entry.rank)}
                   </span>
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{entry.name}</span>
+                  <Link 
+                    href={`/teams?member=${entry.name}`}
+                    className="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors"
+                  >
+                    {entry.name}
+                  </Link>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">Correct</div>
-                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{entry.correctTeams}</div>
+                    <div className="text-xs text-gray-500">Correct</div>
+                    <div className="text-sm font-medium text-gray-900">{entry.correctTeams}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">Perfect</div>
-                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{entry.perfectPicks}</div>
+                    <div className="text-xs text-gray-500">Perfect</div>
+                    <div className="text-sm font-medium text-gray-900">{entry.perfectPicks}</div>
                   </div>
                   <div className="text-right min-w-[60px]">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">Points</div>
-                    <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{entry.points}</div>
+                    <div className="text-xs text-gray-500">Points</div>
+                    <div className="text-sm font-bold text-gray-900">{entry.points}</div>
                   </div>
                 </div>
               </div>

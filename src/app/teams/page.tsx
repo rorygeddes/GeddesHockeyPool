@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { teams } from '@/lib/teams';
 
 interface Pick {
@@ -297,6 +298,14 @@ const getFullTeamName = (abbreviation: string): string => {
 
 export default function TeamsPage() {
   const [expandedMember, setExpandedMember] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const member = searchParams.get('member');
+    if (member) {
+      setExpandedMember(member);
+    }
+  }, [searchParams]);
 
   const toggleMember = (memberName: string) => {
     setExpandedMember(expandedMember === memberName ? null : memberName);
