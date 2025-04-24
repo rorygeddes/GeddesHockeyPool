@@ -363,6 +363,11 @@ export default function DashboardPage() {
         </div>
 
         <div className="mt-4 space-y-4 sm:space-y-6">
+          {/* Round 1 */}
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">Round 1</h2>
+          </div>
+
           {/* Eastern Conference */}
           <div>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">Eastern Conference</h2>
@@ -504,6 +509,30 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 ))}
+            </div>
+          </div>
+
+          {/* Round 2 */}
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">Round 2</h2>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <p className="text-gray-500 dark:text-gray-400 text-center">Round 2 matchups will be available after Round 1 is complete</p>
+            </div>
+          </div>
+
+          {/* Round 3 */}
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">Round 3</h2>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <p className="text-gray-500 dark:text-gray-400 text-center">Round 3 matchups will be available after Round 2 is complete</p>
+            </div>
+          </div>
+
+          {/* Round 4 */}
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-3">Round 4</h2>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <p className="text-gray-500 dark:text-gray-400 text-center">Round 4 matchups will be available after Round 3 is complete</p>
             </div>
           </div>
         </div>

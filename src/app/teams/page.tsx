@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 import { teams } from '@/lib/teams';
 
 interface Pick {
@@ -11,363 +10,630 @@ interface Pick {
   matchupId: string;
 }
 
-interface TeamMember {
+interface PlayerData {
   name: string;
-  picks: Pick[];
+  currentRank?: number;
+  picks: {
+    round1: Pick[];
+    round2: Pick[];
+    round3: Pick[];
+    round4: Pick[];
+  };
+  pastStats?: {
+    year: string;
+    position: number;
+    score: string;
+    perfectPicks?: number;
+    cupWinner?: string;
+  }[];
+  isNewPlayer?: boolean;
 }
 
-const teamMembers: TeamMember[] = [
+interface Matchup {
+  id: string;
+  homeTeam: string;
+  awayTeam: string;
+  conference: 'Eastern' | 'Western';
+}
+
+const matchups: Matchup[] = [
+  { id: 'TOR-OTT', homeTeam: 'Toronto Maple Leafs', awayTeam: 'Ottawa Senators', conference: 'Eastern' },
+  { id: 'TBL-FLA', homeTeam: 'Tampa Bay', awayTeam: 'Florida Panthers', conference: 'Eastern' },
+  { id: 'WSH-MTL', homeTeam: 'Washington Capitals', awayTeam: 'Montreal Canadiens', conference: 'Eastern' },
+  { id: 'CAR-NJD', homeTeam: 'Carolina Hurricanes', awayTeam: 'New Jersey Devils', conference: 'Eastern' },
+  { id: 'WPG-STL', homeTeam: 'Winnipeg Jets', awayTeam: 'St. Louis Blues', conference: 'Western' },
+  { id: 'DAL-COL', homeTeam: 'Dallas Stars', awayTeam: 'Colorado Avalanche', conference: 'Western' },
+  { id: 'VGS-MIN', homeTeam: 'Vegas', awayTeam: 'Minnesota Wild', conference: 'Western' },
+  { id: 'LA-EDM', homeTeam: 'Los Angeles Kings', awayTeam: 'Edmonton Oilers', conference: 'Western' }
+];
+
+const players: PlayerData[] = [
   {
-    name: 'GMA',
-    picks: [
-      { team: 'TOR', games: 7, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 7, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'DAL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    name: "GMA",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'Tor', games: 7, matchupId: 'TOR-OTT' },
+        { team: 'Fla', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'Wsh', games: 7, matchupId: 'WSH-MTL' },
+        { team: 'Car', games: 6, matchupId: 'CAR-NJD' },
+        { team: 'Wpg', games: 5, matchupId: 'WPG-STL' },
+        { team: 'Dal', games: 7, matchupId: 'DAL-COL' },
+        { team: 'Vgk', games: 7, matchupId: 'VGS-MIN' },
+        { team: 'Edm', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2024", position: "1st - 18 Pts", score: "18", perfectPicks: 6 }
     ]
   },
   {
-    name: 'Fiona',
-    picks: [
-      { team: 'TOR', games: 7, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'MTL', games: 7, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    name: "Fiona",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'Tor', games: 7, matchupId: 'TOR-OTT' },
+        { team: 'Fla', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'Mtl', games: 7, matchupId: 'WSH-MTL' },
+        { team: 'Car', games: 6, matchupId: 'CAR-NJD' },
+        { team: 'Wpg', games: 5, matchupId: 'WPG-STL' },
+        { team: 'Col', games: 6, matchupId: 'DAL-COL' },
+        { team: 'Vgk', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'Edm', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2023", position: "3rd - 13pts", score: "13", cupWinner: "VGK" }
     ]
   },
   {
-    name: 'Claire',
-    picks: [
-      { team: 'OTT', games: 5, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 4, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
+    name: "Claire",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'Ott', games: 5, matchupId: 'TOR-OTT' },
+        { team: 'Fla', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'Wsh', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'Car', games: 4, matchupId: 'CAR-NJD' },
+        { team: 'Wpg', games: 5, matchupId: 'WPG-STL' },
+        { team: 'Col', games: 6, matchupId: 'DAL-COL' },
+        { team: 'Vgk', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'Edm', games: 6, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    isNewPlayer: true
+  },
+  {
+    name: "Noah",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 5, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2024", position: "2nd - 17pts", perfectPicks: 6 },
+      { year: "2019", position: "3rd - 8pts", score: "8" }
     ]
   },
   {
-    name: 'Noah',
-    picks: [
-      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 5, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    name: "Cooper",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+        { team: 'LAK', games: 6, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2018", position: "2nd - 10pts", score: "10" },
+      { year: "2017", position: "Last - 11pts", score: "11" }
     ]
   },
   {
-    name: 'Cooper',
-    picks: [
-      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'LAK', games: 6, matchupId: 'LA-EDM' }
+    name: "Rayna",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+        { team: 'STL', games: 7, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 7, matchupId: 'DAL-COL' },
+        { team: 'MIN', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    isNewPlayer: true
+  },
+  {
+    name: "Rory",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+        { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 7, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 7, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2017", position: "2nd - 15pts", score: "15" }
     ]
   },
   {
-    name: 'Rayna',
-    picks: [
-      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
-      { team: 'STL', games: 7, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'MIN', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
+    name: "Grady",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+        { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2024", position: "3rd - 17pts", perfectPicks: 5 }
     ]
   },
   {
-    name: 'Rory',
-    picks: [
-      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
-      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 7, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    name: "Crosby",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'MTL', games: 6, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+        { team: 'DAL', games: 7, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2018", position: "Last - 6pts", score: "6" }
     ]
   },
   {
-    name: 'Grady',
-    picks: [
-      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 6, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    name: "Bow",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+        { team: 'LAK', games: 6, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2023", position: "1st - 14pts", score: "14", perfectPicks: 5 },
+      { year: "2019", position: "2nd - 9pts", score: "9" },
+      { year: "2017", position: "1st - 16pts", score: "16" }
     ]
   },
   {
-    name: 'Crosby',
-    picks: [
-      { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'MTL', games: 6, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
-      { team: 'DAL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    name: "Jill",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+        { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
+        { team: 'MTL', games: 6, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 4, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2024", position: "Middle of pack" }
     ]
   },
   {
-    name: 'Bow',
-    picks: [
-      { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'LAK', games: 6, matchupId: 'LA-EDM' }
+    name: "Jordan",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+        { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 4, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
+        { team: 'LAK', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2018", position: "3rd - 9pts", score: "9" }
     ]
   },
   {
-    name: 'Jill',
-    picks: [
-      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
-      { team: 'MTL', games: 6, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 4, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 6, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+    name: "Grant",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+        { team: 'COL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
+        { team: 'LA', games: 5, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2024", position: "Last - 7pts", score: "7" },
+      { year: "2023", position: "Last - 4pts", score: "4" },
+      { year: "2018", position: "1st - 13pts Round 1", score: "13" }
     ]
   },
   {
-    name: 'Jordan',
-    picks: [
-      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
-      { team: 'TBL', games: 7, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 4, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
-      { team: 'LAK', games: 7, matchupId: 'LA-EDM' }
+    name: "Dave",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
+        { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2019", position: "1st - 10pts", score: "10" },
+      { year: "2017", position: "Last - 8pts", score: "8" }
     ]
   },
   {
-    name: 'Grant',
-    picks: [
-      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 7, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 7, matchupId: 'VGS-MIN' },
-      { team: 'LAK', games: 5, matchupId: 'LA-EDM' }
+    name: "Rhonda",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
+        { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
+        { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
+        { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
+        { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
+        { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2019", position: "Last - 1pt", score: "1" }
     ]
   },
   {
-    name: 'Dave',
-    picks: [
-      { team: 'TOR', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 7, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 6, matchupId: 'WPG-STL' },
-      { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 7, matchupId: 'LA-EDM' }
-    ]
+    name: "Tina",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'Ott', games: 6, matchupId: 'TOR-OTT' },
+        { team: 'Fla', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'Wsh', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'Njd', games: 7, matchupId: 'CAR-NJD' },
+        { team: 'Stl', games: 6, matchupId: 'WPG-STL' },
+        { team: 'Col', games: 7, matchupId: 'DAL-COL' },
+        { team: 'Vgk', games: 5, matchupId: 'VGS-MIN' },
+        { team: 'Lak', games: 7, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    isNewPlayer: true
   },
   {
-    name: 'Rhonda',
-    picks: [
-      { team: 'OTT', games: 7, matchupId: 'TOR-OTT' },
-      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'CAR', games: 6, matchupId: 'CAR-NJD' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'DAL', games: 6, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'EDM', games: 6, matchupId: 'LA-EDM' }
-    ]
-  },
-  {
-    name: 'Tina',
-    picks: [
-      { team: 'OTT', games: 6, matchupId: 'TOR-OTT' },
-      { team: 'FLA', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'NJD', games: 7, matchupId: 'CAR-NJD' },
-      { team: 'STL', games: 6, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 7, matchupId: 'DAL-COL' },
-      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'LAK', games: 7, matchupId: 'LA-EDM' }
-    ]
-  },
-  {
-    name: 'Bird',
-    picks: [
-      { team: 'TOR', games: 5, matchupId: 'TOR-OTT' },
-      { team: 'CAR', games: 5, matchupId: 'CAR-NJD' },
-      { team: 'TBL', games: 6, matchupId: 'TBL-FLA' },
-      { team: 'WSH', games: 5, matchupId: 'WSH-MTL' },
-      { team: 'EDM', games: 6, matchupId: 'LA-EDM' },
-      { team: 'VGK', games: 5, matchupId: 'VGS-MIN' },
-      { team: 'WPG', games: 5, matchupId: 'WPG-STL' },
-      { team: 'COL', games: 5, matchupId: 'DAL-COL' }
+    name: "Bird",
+    currentRank: 0,
+    picks: {
+      round1: [
+        { team: 'Tor', games: 5, matchupId: 'TOR-OTT' },
+        { team: 'Tbl', games: 6, matchupId: 'TBL-FLA' },
+        { team: 'Wsh', games: 5, matchupId: 'WSH-MTL' },
+        { team: 'Car', games: 5, matchupId: 'CAR-NJD' },
+        { team: 'Wpg', games: 5, matchupId: 'WPG-STL' },
+        { team: 'Col', games: 5, matchupId: 'DAL-COL' },
+        { team: 'Vgk', games: 5, matchupId: 'VGS-MIN' },
+        { team: 'Lak', games: 6, matchupId: 'LA-EDM' }
+      ],
+      round2: [],
+      round3: [],
+      round4: []
+    },
+    pastStats: [
+      { year: "2023", position: "2nd - 14pts", score: "14", perfectPicks: 4 },
+      { year: "2017", position: "3rd - 14pts", score: "14" }
     ]
   }
 ];
 
-const getTeamAbbreviation = (teamName: string): string => {
-  const abbreviations: { [key: string]: string } = {
-    'Toronto Maple Leafs': 'TOR',
-    'Ottawa Senators': 'OTT',
-    'Tampa Bay Lightning': 'TBL',
-    'Florida Panthers': 'FLA',
-    'Washington Capitals': 'WSH',
-    'Montreal Canadiens': 'MTL',
-    'Carolina Hurricanes': 'CAR',
-    'New Jersey Devils': 'NJD',
-    'Winnipeg Jets': 'WPG',
-    'St. Louis Blues': 'STL',
-    'Dallas Stars': 'DAL',
-    'Colorado Avalanche': 'COL',
-    'Vegas Golden Knights': 'VGK',
-    'Minnesota Wild': 'MIN',
-    'Los Angeles Kings': 'LAK',
-    'Edmonton Oilers': 'EDM'
-  };
-  return abbreviations[teamName] || '';
-};
-
-const getTeamLogo = (teamName: string) => {
-  const abbreviation = getTeamAbbreviation(teamName);
-  const teamKey = Object.keys(teams).find(
-    key => teams[key].abbreviation === abbreviation
-  );
-  if (!teamKey || !teams[teamKey].logo) {
-    console.warn(`No logo found for team: ${teamName}`);
-    return '/placeholder-logo.png';
-  }
-  return teams[teamKey].logo;
-};
-
-const getFullTeamName = (abbreviation: string): string => {
-  const teamNames: { [key: string]: string } = {
-    'TOR': 'Toronto Maple Leafs',
-    'OTT': 'Ottawa Senators',
-    'TBL': 'Tampa Bay Lightning',
-    'FLA': 'Florida Panthers',
-    'WSH': 'Washington Capitals',
-    'MTL': 'Montreal Canadiens',
-    'CAR': 'Carolina Hurricanes',
-    'NJD': 'New Jersey Devils',
-    'WPG': 'Winnipeg Jets',
-    'STL': 'St. Louis Blues',
-    'DAL': 'Dallas Stars',
-    'COL': 'Colorado Avalanche',
-    'VGK': 'Vegas Golden Knights',
-    'MIN': 'Minnesota Wild',
-    'LAK': 'Los Angeles Kings',
-    'EDM': 'Edmonton Oilers'
-  };
-  return teamNames[abbreviation] || abbreviation;
-};
-
-function TeamsList({ initialExpandedMember }: { initialExpandedMember: string | null }) {
-  const [expandedMember, setExpandedMember] = useState<string | null>(initialExpandedMember);
-
-  const toggleMember = (memberName: string) => {
-    setExpandedMember(expandedMember === memberName ? null : memberName);
-  };
-
+function PlayerAvatar({ name }: { name: string }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {teamMembers.map((member) => (
-        <div key={member.name} className="bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-800 rounded-lg shadow-md overflow-hidden">
-          <button
-            onClick={() => toggleMember(member.name)}
-            className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-400/30 dark:hover:bg-gray-600/30 transition-colors"
-          >
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{member.name}</h2>
-            <svg
-              className={`w-5 h-5 text-gray-700 dark:text-gray-300 transform transition-transform ${
-                expandedMember === member.name ? 'rotate-180' : ''
-              }`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {expandedMember === member.name && (
-            <div className="px-6 pb-4">
-              <div className="space-y-3">
-                {member.picks.map((pick, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-200/70 backdrop-blur-sm rounded-lg p-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="relative w-8 h-8 bg-white rounded-full p-1">
-                        <Image
-                          src={getTeamLogo(getFullTeamName(pick.team))}
-                          alt={pick.team}
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                      <span className="text-sm font-medium text-gray-900">
-                        {getFullTeamName(pick.team)}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-700">in {pick.games}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
+    <div className="w-24 h-24 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white text-3xl font-bold">
+      {name[0]}
     </div>
   );
 }
 
-function TeamsContent() {
-  const searchParams = useSearchParams();
-  const member = searchParams.get('member');
-  
-  return <TeamsList initialExpandedMember={member} />;
+function RoundDropdown({ round, picks }: { round: string; picks: Pick[] }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getTeamFullName = (team: string) => {
+    // Convert abbreviation to team ID
+    const teamId = Object.keys(teams).find(key => 
+      teams[key].abbreviation.toLowerCase() === team.toLowerCase()
+    );
+    return teamId ? teams[teamId].name : team;
+  };
+
+  const getTeamLogo = (team: string) => {
+    // Convert abbreviation to team ID
+    const teamId = Object.keys(teams).find(key => 
+      teams[key].abbreviation.toLowerCase() === team.toLowerCase()
+    );
+    
+    if (!teamId || !teams[teamId]?.logo) {
+      console.warn(`No logo found for team: ${team}`);
+      return '/images/placeholder-logo.png';
+    }
+    return teams[teamId].logo;
+  };
+
+  return (
+    <div className="border dark:border-gray-700 rounded-lg overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3 flex justify-between items-center bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+      >
+        <span className="font-medium text-gray-900 dark:text-white">{round}</span>
+        <svg
+          className={`w-5 h-5 transform transition-transform ${isOpen ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      <div className={`${isOpen ? 'block' : 'hidden'} p-4 bg-white dark:bg-gray-800`}>
+        {picks.length > 0 ? (
+          <div className="space-y-3">
+            {picks.map((pick, index) => {
+              const matchup = matchups.find(m => m.id === pick.matchupId);
+              if (!matchup) return null;
+
+              const teamFullName = getTeamFullName(pick.team);
+              const logoUrl = getTeamLogo(pick.team);
+
+              return (
+                <div key={index} className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative w-8 h-8">
+                      <Image
+                        src={logoUrl}
+                        alt={teamFullName}
+                        fill
+                        className="object-contain"
+                        priority
+                        unoptimized
+                      />
+                    </div>
+                    <span className="font-medium text-gray-900 dark:text-white">{teamFullName}</span>
+                  </div>
+                  <span className="text-gray-600 dark:text-gray-400">in {pick.games}</span>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-gray-500 dark:text-gray-400 text-center">No picks made yet</p>
+        )}
+      </div>
+    </div>
+  );
 }
 
-export default function TeamsPage() {
+function PlayerProfile({ player }: { player: PlayerData }) {
   return (
-    <div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Team Members & Picks</h1>
-        <Suspense fallback={<div>Loading...</div>}>
-          <TeamsContent />
-        </Suspense>
+    <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="flex flex-col items-center mb-6">
+        <PlayerAvatar name={player.name} />
+        <h2 className="text-2xl font-bold mt-4 text-gray-900 dark:text-white">{player.name}</h2>
+        {player.currentRank && (
+          <div className="mt-2 text-lg text-gray-600 dark:text-gray-400">
+            Current Rank: {player.currentRank}
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">2025 Playoff Picks</h3>
+          <div className="space-y-3">
+            <RoundDropdown round="Round 1" picks={player.picks.round1} />
+            <RoundDropdown round="Round 2" picks={player.picks.round2} />
+            <RoundDropdown round="Round 3" picks={player.picks.round3} />
+            <RoundDropdown round="Round 4" picks={player.picks.round4} />
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">Past Performance</h3>
+          {player.isNewPlayer ? (
+            <p className="text-gray-500 dark:text-gray-400">New Player for 2025</p>
+          ) : player.pastStats ? (
+            <div className="grid grid-cols-1 gap-3">
+              {player.pastStats.map((stat) => (
+                <div key={stat.year} className="bg-gray-50 dark:bg-gray-700 p-3 rounded">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700 dark:text-gray-300">{stat.year}</span>
+                    <div className="text-right">
+                      <span className="font-medium text-gray-900 dark:text-gray-100">
+                        Position: {stat.position}
+                        {stat.perfectPicks && ` | Perfect Picks: ${stat.perfectPicks}`}
+                      </span>
+                      {stat.cupWinner && (
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          Cup Winner: {stat.cupWinner}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400">No previous history</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function PlayersPage() {
+  const [selectedPlayer, setSelectedPlayer] = useState<PlayerData | null>(players[0]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="lg:hidden mb-4">
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center justify-between"
+        >
+          <span>{selectedPlayer?.name || "Select Player"}</span>
+          <svg
+            className={`w-5 h-5 transform transition-transform ${isMobileMenuOpen ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        {isMobileMenuOpen && (
+          <div className="mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700">
+            {players.map((player) => (
+              <button
+                key={player.name}
+                onClick={() => {
+                  setSelectedPlayer(player);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                {player.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="hidden lg:block w-64 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+          <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Players</h2>
+          <div className="space-y-2">
+            {players.map((player) => (
+              <button
+                key={player.name}
+                onClick={() => setSelectedPlayer(player)}
+                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                  selectedPlayer?.name === player.name
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                {player.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex-1">
+          {selectedPlayer && <PlayerProfile player={selectedPlayer} />}
+        </div>
       </div>
     </div>
   );

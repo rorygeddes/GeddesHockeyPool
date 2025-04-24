@@ -1,14 +1,7 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Navigation from "./components/Navigation";
+'use client';
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Geddes Hockey Pool 2025",
-  description: "NHL Playoff Pool",
-};
+import './globals.css';
+import Navigation from '@/components/Navigation';
 
 export default function RootLayout({
   children,
@@ -17,14 +10,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="color-scheme" content="light dark" />
-      </head>
-      <body className={`${inter.className} min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
+      <body>
         <Navigation />
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
       </body>
     </html>
   );
