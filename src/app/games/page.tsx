@@ -23,10 +23,23 @@ interface Conference {
   matchups: Matchup[];
 }
 
+interface Game {
+  id: number;
+  homeTeam: string;
+  awayTeam: string;
+  date: string;
+  score?: {
+    home: number;
+    away: number;
+  };
+  status?: string;
+}
+
 export default function PlayoffMatchups() {
   const [conferences, setConferences] = useState<Conference[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
     async function fetchPlayoffData() {
