@@ -1,6 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { teamMembers } from '@/app/matchups/page';
+
+interface TeamMemberPick {
+  team: string;
+  games: number;
+  matchupId: string;
+}
+
+interface CompletedMatchup {
+  id: string;
+  winner: string;
+  games: number;
+}
 
 interface LeaderboardEntry {
   rank: number;
@@ -10,27 +23,95 @@ interface LeaderboardEntry {
   perfectPicks: number;
 }
 
-const leaderboardData: LeaderboardEntry[] = [
-  { rank: 0, name: "GMA", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Fiona", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Claire", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Noah", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Cooper", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Rayna", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Rory", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Grady", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Crosby", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Bow", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Jill", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Jordan", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Grant", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Dave", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Rhonda", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Tina", points: 0, correctTeams: 0, perfectPicks: 0 },
-  { rank: 0, name: "Bird", points: 0, correctTeams: 0, perfectPicks: 0 }
+interface TeamMember {
+  name: string;
+  picks: TeamMemberPick[];
+}
+
+// Add completed matchups data
+const completedMatchups: CompletedMatchup[] = [
+  {
+    id: 'CAR-NJD',
+    winner: 'CAR',
+    games: 5
+  }
 ];
 
-const getRankStyle = (rank: number) => {
+// Calculate points and create leaderboard data
+const calculatePoints = (picks: TeamMemberPick[]): number => {
+  return picks.reduce((total, pick) => {
+    const matchup = completedMatchups.find(m => m.id === pick.matchupId);
+    if (!matchup) return total;
+
+    const correctTeam = pick.team === matchup.winner;
+    const correctGames = pick.games === matchup.games;
+
+    if (correctTeam && correctGames) {
+      return total + 2; // Perfect pick - 2 points
+    } else if (correctTeam) {
+      return total + 1; // Correct team only - 1 point
+    }
+    return total;
+  }, 0);
+};
+
+interface Stats {
+  correctTeams: number;
+  perfectPicks: number;
+}
+
+const calculateStats = (picks: TeamMemberPick[]): Stats => {
+  return picks.reduce((stats, pick) => {
+    const matchup = completedMatchups.find(m => m.id === pick.matchupId);
+    if (!matchup) return stats;
+
+    const correctTeam = pick.team === matchup.winner;
+    const correctGames = pick.games === matchup.games;
+
+    if (correctTeam && correctGames) {
+      return {
+        correctTeams: stats.correctTeams + 1,
+        perfectPicks: stats.perfectPicks + 1
+      };
+    } else if (correctTeam) {
+      return {
+        correctTeams: stats.correctTeams + 1,
+        perfectPicks: stats.perfectPicks
+      };
+    }
+    return stats;
+  }, { correctTeams: 0, perfectPicks: 0 });
+};
+
+const leaderboardData: LeaderboardEntry[] = teamMembers
+  .map((member: TeamMember) => {
+    const stats = calculateStats(member.picks);
+    return {
+      rank: 0, // Will be set after sorting
+      name: member.name,
+      points: calculatePoints(member.picks),
+      correctTeams: stats.correctTeams,
+      perfectPicks: stats.perfectPicks
+    };
+  })
+  .sort((a, b) => b.points - a.points)
+  .reduce((acc: LeaderboardEntry[], entry, index, array) => {
+    if (index === 0) {
+      // First entry always gets rank 1
+      return [...acc, { ...entry, rank: 1 }];
+    }
+
+    const prevEntry = array[index - 1];
+    if (entry.points === prevEntry.points) {
+      // If points are equal, use the same rank as previous entry
+      return [...acc, { ...entry, rank: acc[index - 1].rank }];
+    } else {
+      // If points are different, rank is the current position + 1
+      return [...acc, { ...entry, rank: acc[index - 1].rank + 1 }];
+    }
+  }, []);
+
+const getRankStyle = (rank: number): string => {
   if (rank === 0) return 'bg-white border-gray-200';
   if (rank === 1) return 'bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-400';
   if (rank === 2) return 'bg-gradient-to-r from-gray-100 to-gray-200 border-gray-400';
@@ -39,7 +120,7 @@ const getRankStyle = (rank: number) => {
   return 'bg-white border-gray-200';
 };
 
-const getRankEmoji = (rank: number) => {
+const getRankEmoji = (rank: number): string | number => {
   if (rank === 0) return '-';
   if (rank === 1) return '🥇';
   if (rank === 2) return '🥈';
@@ -113,4 +194,4 @@ export default function LeaderboardPage() {
       </div>
     </div>
   );
-} 
+}
