@@ -34,67 +34,66 @@ const completedMatchups: CompletedMatchup[] = [
     id: 'CAR-NJD',
     winner: 'CAR',
     games: 5
+  },
+  {
+    id: 'WSH-MTL',
+    winner: 'WSH',
+    games: 5
+  },
+  {
+    id: 'TBL-FLA',
+    winner: 'FLA',
+    games: 5
   }
 ];
 
 // Calculate points and create leaderboard data
-const calculatePoints = (picks: TeamMemberPick[]): number => {
-  return picks.reduce((total, pick) => {
+const calculatePoints = (picks: TeamMemberPick[]): LeaderboardEntry => {
+  let correctTeams = 0;
+  let perfectPicks = 0;
+  let points = 0;
+
+  picks.forEach(pick => {
     const matchup = completedMatchups.find(m => m.id === pick.matchupId);
-    if (!matchup) return total;
-
-    const correctTeam = pick.team === matchup.winner;
-    const correctGames = pick.games === matchup.games;
-
-    if (correctTeam && correctGames) {
-      return total + 2; // Perfect pick - 2 points
-    } else if (correctTeam) {
-      return total + 1; // Correct team only - 1 point
+    if (matchup) {
+      if (pick.team === matchup.winner) {
+        correctTeams++;
+        if (pick.games === matchup.games) {
+          perfectPicks++;
+          points += 2; // Perfect pick - 2 points
+        } else {
+          points += 1; // Correct team only - 1 point
+        }
+      }
     }
-    return total;
-  }, 0);
-};
+  });
 
-interface Stats {
-  correctTeams: number;
-  perfectPicks: number;
-}
-
-const calculateStats = (picks: TeamMemberPick[]): Stats => {
-  return picks.reduce((stats, pick) => {
-    const matchup = completedMatchups.find(m => m.id === pick.matchupId);
-    if (!matchup) return stats;
-
-    const correctTeam = pick.team === matchup.winner;
-    const correctGames = pick.games === matchup.games;
-
-    if (correctTeam && correctGames) {
-      return {
-        correctTeams: stats.correctTeams + 1,
-        perfectPicks: stats.perfectPicks + 1
-      };
-    } else if (correctTeam) {
-      return {
-        correctTeams: stats.correctTeams + 1,
-        perfectPicks: stats.perfectPicks
-      };
-    }
-    return stats;
-  }, { correctTeams: 0, perfectPicks: 0 });
+  return {
+    rank: 0, // Will be set after sorting
+    name: '',
+    points,
+    correctTeams,
+    perfectPicks
+  };
 };
 
 const leaderboardData: LeaderboardEntry[] = teamMembers
   .map((member: TeamMember) => {
-    const stats = calculateStats(member.picks);
+    const leaderboardEntry = calculatePoints(member.picks);
     return {
-      rank: 0, // Will be set after sorting
-      name: member.name,
-      points: calculatePoints(member.picks),
-      correctTeams: stats.correctTeams,
-      perfectPicks: stats.perfectPicks
+      ...leaderboardEntry,
+      name: member.name
     };
   })
-  .sort((a, b) => b.points - a.points)
+  .sort((a, b) => {
+    if (b.points !== a.points) {
+      return b.points - a.points;
+    }
+    if (b.perfectPicks !== a.perfectPicks) {
+      return b.perfectPicks - a.perfectPicks;
+    }
+    return b.correctTeams - a.correctTeams;
+  })
   .reduce((acc: LeaderboardEntry[], entry, index, array) => {
     if (index === 0) {
       // First entry always gets rank 1
@@ -102,11 +101,11 @@ const leaderboardData: LeaderboardEntry[] = teamMembers
     }
 
     const prevEntry = array[index - 1];
-    if (entry.points === prevEntry.points) {
-      // If points are equal, use the same rank as previous entry
+    if (entry.points === prevEntry.points && entry.perfectPicks === prevEntry.perfectPicks && entry.correctTeams === prevEntry.correctTeams) {
+      // If points, perfect picks, and correct teams are equal, use the same rank as previous entry
       return [...acc, { ...entry, rank: acc[index - 1].rank }];
     } else {
-      // If points are different, rank is the current position + 1
+      // If any of the above are different, rank is the current position + 1
       return [...acc, { ...entry, rank: acc[index - 1].rank + 1 }];
     }
   }, []);

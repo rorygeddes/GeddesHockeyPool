@@ -109,3 +109,81 @@
   height: 100%;
   opacity: 0.7;
 }
+
+.matchup-header {
+  position: relative;
+}
+
+.matchup-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.7;
+}
+
+.matchup-header[data-home-team="Toronto Maple Leafs"]::before {
+  background: linear-gradient(135deg, #00205B55 0%, #FFFFFF44 25%, #00205B55 100%);
+}
+
+.matchup-header[data-home-team="Ottawa Senators"]::before {
+  background: linear-gradient(135deg, #C5203255 0%, #00000044 25%, #C5203255 100%);
+}
+
+.matchup-header[data-home-team="Tampa Bay"]::before {
+  background: linear-gradient(135deg, #00286855 0%, #FFFFFF44 25%, #00286855 100%);
+}
+
+.matchup-header[data-home-team="Florida Panthers"]::before {
+  background: linear-gradient(135deg, #C8102E55 0%, #041E4244 25%, #C8102E55 100%);
+}
+
+.matchup-header[data-home-team="Washington Capitals"]::before {
+  background: linear-gradient(135deg, #C8102E55 0%, #041E4244 25%, #C8102E55 100%);
+}
+
+.matchup-header[data-home-team="Montreal Canadiens"]::before {
+  background: linear-gradient(135deg, #AF1E2D55 0%, #19216844 25%, #AF1E2D55 100%);
+}
+
+.matchup-header[data-home-team="Carolina Hurricanes"]::before {
+  background: linear-gradient(135deg, #CC000055 0%, #00000044 25%, #CC000055 100%);
+}
+
+.matchup-header[data-home-team="New Jersey Devils"]::before {
+  background: linear-gradient(135deg, #CE112655 0%, #00000044 25%, #CE112655 100%);
+}
+
+.matchup-header[data-home-team="Winnipeg Jets"]::before {
+  background: linear-gradient(135deg, #041E4255 0%, #004C9744 25%, #041E4255 100%);
+}
+
+.matchup-header[data-home-team="St. Louis Blues"]::before {
+  background: linear-gradient(135deg, #002F8755 0%, #FCB51444 25%, #002F8755 100%);
+}
+
+.matchup-header[data-home-team="Dallas Stars"]::before {
+  background: linear-gradient(135deg, #00684755 0%, #8F8F8C44 25%, #00684755 100%);
+}
+
+.matchup-header[data-home-team="Colorado Avalanche"]::before {
+  background: linear-gradient(135deg, #6F263D55 0%, #23619244 25%, #6F263D55 100%);
+}
+
+.matchup-header[data-home-team="Vegas"]::before {
+  background: linear-gradient(135deg, #B4975A55 0%, #333F4244 25%, #B4975A55 100%);
+}
+
+.matchup-header[data-home-team="Minnesota Wild"]::before {
+  background: linear-gradient(135deg, #A6192E55 0%, #15473444 25%, #A6192E55 100%);
+}
+
+.matchup-header[data-home-team="Los Angeles Kings"]::before {
+  background: linear-gradient(135deg, #11111155 0%, #A2AAAD44 25%, #11111155 100%);
+}
+
+.matchup-header[data-home-team="Edmonton Oilers"]::before {
+  background: linear-gradient(135deg, #041E4255 0%, #FF4C0044 25%, #041E4255 100%);
+}

@@ -28,6 +28,16 @@ interface TeamMember {
   picks: TeamMemberPick[];
 }
 
+interface CompletedMatchup {
+  id: string;
+  homeTeam: string;
+  awayTeam: string;
+  homeScore: number;
+  awayScore: number;
+  winner: string;
+  games: number;
+}
+
 const teamColors: { [key: string]: { primary: string; secondary: string } } = {
   'Toronto Maple Leafs': { primary: '#00205B', secondary: '#FFFFFF' },
   'Ottawa Senators': { primary: '#C52032', secondary: '#000000' },
@@ -56,6 +66,36 @@ const matchups: Matchup[] = [
   { id: 'DAL-COL', homeTeam: 'Dallas Stars', awayTeam: 'Colorado Avalanche', conference: 'Western' },
   { id: 'VGS-MIN', homeTeam: 'Vegas', awayTeam: 'Minnesota Wild', conference: 'Western' },
   { id: 'LA-EDM', homeTeam: 'Los Angeles Kings', awayTeam: 'Edmonton Oilers', conference: 'Western' }
+];
+
+const completedMatchups: CompletedMatchup[] = [
+  {
+    id: 'CAR-NJD',
+    homeTeam: 'Carolina Hurricanes',
+    awayTeam: 'New Jersey Devils',
+    homeScore: 4,
+    awayScore: 1,
+    winner: 'CAR',
+    games: 5
+  },
+  {
+    id: 'WSH-MTL',
+    homeTeam: 'Washington Capitals',
+    awayTeam: 'Montreal Canadiens',
+    homeScore: 4,
+    awayScore: 1,
+    winner: 'WSH',
+    games: 5
+  },
+  {
+    id: 'TBL-FLA',
+    homeTeam: 'Tampa Bay',
+    awayTeam: 'Florida Panthers',
+    homeScore: 1,
+    awayScore: 4,
+    winner: 'FLA',
+    games: 5
+  }
 ];
 
 export const teamMembers: TeamMember[] = [
@@ -360,6 +400,110 @@ const getMatchupGradient = (homeTeam: string, awayTeam: string) => {
   return `linear-gradient(135deg, ${home.primary}55 0%, ${home.secondary}44 25%, ${away.primary}55 75%, ${away.secondary}44 100%)`;
 };
 
+const MatchupResult = ({
+  homeTeam,
+  awayTeam,
+  homeScore,
+  awayScore,
+  winner,
+  games,
+  picks
+}: {
+  homeTeam: string;
+  awayTeam: string;
+  homeScore: number;
+  awayScore: number;
+  winner: string;
+  games: number;
+  picks: Pick[];
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const homeTeamColors = teamColors[homeTeam];
+  
+  return (
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div 
+        className="p-4 cursor-pointer relative overflow-hidden"
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{
+          background: `linear-gradient(135deg, ${homeTeamColors?.primary}55 0%, ${homeTeamColors?.secondary}44 25%, ${homeTeamColors?.primary}55 100%)`
+        }}
+      >
+        <div className="flex items-center justify-between relative z-10">
+          <div className="flex items-center space-x-2 flex-1 min-w-0">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
+              <Image
+                src={getTeamLogo(homeTeam)}
+                alt={homeTeam}
+                fill
+                className="object-contain"
+              />
+            </div>
+            <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate">
+              {homeTeam}
+            </span>
+          </div>
+          <div className="text-lg font-bold text-black dark:text-white">
+            {homeScore} - {awayScore}
+          </div>
+          <div className="flex items-center space-x-2 flex-1 min-w-0 justify-end">
+            <span className="font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 truncate text-right">
+              {awayTeam}
+            </span>
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1 flex-shrink-0">
+              <Image
+                src={getTeamLogo(awayTeam)}
+                alt={awayTeam}
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {isExpanded && (
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4">
+          <div className="space-y-2">
+            {picks.map((pick, index) => {
+              const isCorrectTeam = pick.selectedTeam === winner;
+              const isCorrectGames = isCorrectTeam && pick.games === games;
+              
+              return (
+                <div 
+                  key={index} 
+                  className={`flex flex-col text-xs sm:text-sm p-2 rounded shadow-sm ${
+                    isCorrectGames
+                      ? 'bg-green-100/90'
+                      : isCorrectTeam
+                        ? 'bg-blue-100/90'
+                        : 'bg-white/90'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="relative w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full p-0.5">
+                        <Image
+                          src={getTeamLogo(getFullTeamName(pick.selectedTeam))}
+                          alt={pick.selectedTeam}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <span className="font-medium text-gray-900">{pick.name}</span>
+                    </div>
+                    <span className="text-gray-600">in {pick.games}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function DashboardPage() {
   const [selectedMatchup, setSelectedMatchup] = useState<string | null>(null);
 
@@ -370,9 +514,25 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <div>
           <h2 className="text-xl font-semibold mb-4">Eastern Conference</h2>
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-4">
+            {completedMatchups.map((matchup) => (
+              <MatchupResult
+                key={matchup.id}
+                homeTeam={matchup.homeTeam}
+                awayTeam={matchup.awayTeam}
+                homeScore={matchup.homeScore}
+                awayScore={matchup.awayScore}
+                winner={matchup.winner}
+                games={matchup.games}
+                picks={getPicksForMatchup(matchup.id)}
+              />
+            ))}
+            
             {matchups
-              .filter(matchup => matchup.conference === 'Eastern')
+              .filter(matchup => 
+                matchup.conference === 'Eastern' && 
+                !completedMatchups.find(cm => cm.id === matchup.id)
+              )
               .map((matchup) => (
                 <div 
                   key={matchup.id} 
