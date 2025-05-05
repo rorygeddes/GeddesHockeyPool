@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { teams } from '@/lib/teams';
@@ -572,7 +572,7 @@ function PlayerProfile({ player }: { player: PlayerData }) {
   );
 }
 
-export default function PlayersPage() {
+function PlayerSelector() {
   const searchParams = useSearchParams();
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerData | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -645,5 +645,13 @@ export default function PlayersPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PlayersPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PlayerSelector />
+    </Suspense>
   );
 }
