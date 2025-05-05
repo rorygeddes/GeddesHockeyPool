@@ -31,3 +31,15 @@ body {
 * {
   color-scheme: light !important;
 }
+
+.background-image {
+  position: fixed;
+  inset: 0;
+  background-image: url('/team-logos/toronto-maple-leafs.png');
+  background-size: 60%;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}

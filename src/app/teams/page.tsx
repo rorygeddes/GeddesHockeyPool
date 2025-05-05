@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { teams } from '@/lib/teams';
 
 interface Pick {
@@ -21,8 +22,8 @@ interface PlayerData {
   };
   pastStats?: {
     year: string;
-    position: number;
-    score: string;
+    position: string;
+    score: number;
     perfectPicks?: number;
     cupWinner?: string;
   }[];
@@ -67,7 +68,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2024", position: "1st - 18 Pts", score: "18", perfectPicks: 6 }
+      { year: "2024", position: "1st", score: 18, perfectPicks: 6 }
     ]
   },
   {
@@ -89,7 +90,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2023", position: "3rd - 13pts", score: "13", cupWinner: "VGK" }
+      { year: "2023", position: "3rd", score: 13, cupWinner: "VGK" }
     ]
   },
   {
@@ -131,8 +132,8 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2024", position: "2nd - 17pts", perfectPicks: 6 },
-      { year: "2019", position: "3rd - 8pts", score: "8" }
+      { year: "2024", position: "2nd", score: 17, perfectPicks: 6 },
+      { year: "2019", position: "3rd", score: 8 }
     ]
   },
   {
@@ -154,8 +155,8 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2018", position: "2nd - 10pts", score: "10" },
-      { year: "2017", position: "Last - 11pts", score: "11" }
+      { year: "2018", position: "2nd", score: 10 },
+      { year: "2017", position: "Last", score: 11 }
     ]
   },
   {
@@ -197,7 +198,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2017", position: "2nd - 15pts", score: "15" }
+      { year: "2017", position: "2nd", score: 15 }
     ]
   },
   {
@@ -219,7 +220,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2024", position: "3rd - 17pts", perfectPicks: 5 }
+      { year: "2024", position: "3rd", score: 17, perfectPicks: 5 }
     ]
   },
   {
@@ -241,7 +242,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2018", position: "Last - 6pts", score: "6" }
+      { year: "2018", position: "Last", score: 6 }
     ]
   },
   {
@@ -263,9 +264,9 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2023", position: "1st - 14pts", score: "14", perfectPicks: 5 },
-      { year: "2019", position: "2nd - 9pts", score: "9" },
-      { year: "2017", position: "1st - 16pts", score: "16" }
+      { year: "2023", position: "1st", score: 14, perfectPicks: 5 },
+      { year: "2019", position: "2nd", score: 9 },
+      { year: "2017", position: "1st", score: 16 }
     ]
   },
   {
@@ -287,7 +288,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2024", position: "Middle of pack" }
+      { year: "2018", position: "3rd", score: 9 }
     ]
   },
   {
@@ -309,7 +310,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2018", position: "3rd - 9pts", score: "9" }
+      { year: "2018", position: "3rd", score: 9 }
     ]
   },
   {
@@ -331,9 +332,9 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2024", position: "Last - 7pts", score: "7" },
-      { year: "2023", position: "Last - 4pts", score: "4" },
-      { year: "2018", position: "1st - 13pts Round 1", score: "13" }
+      { year: "2024", position: "Last", score: 7 },
+      { year: "2023", position: "Last", score: 4 },
+      { year: "2018", position: "1st", score: 13 }
     ]
   },
   {
@@ -355,8 +356,8 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2019", position: "1st - 10pts", score: "10" },
-      { year: "2017", position: "Last - 8pts", score: "8" }
+      { year: "2019", position: "1st", score: 10 },
+      { year: "2017", position: "Last", score: 8 }
     ]
   },
   {
@@ -378,7 +379,7 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2019", position: "Last - 1pt", score: "1" }
+      { year: "2019", position: "Last", score: 1 }
     ]
   },
   {
@@ -420,8 +421,8 @@ const players: PlayerData[] = [
       round4: []
     },
     pastStats: [
-      { year: "2023", position: "2nd - 14pts", score: "14", perfectPicks: 4 },
-      { year: "2017", position: "3rd - 14pts", score: "14" }
+      { year: "2023", position: "2nd", score: 14, perfectPicks: 4 },
+      { year: "2017", position: "3rd", score: 14 }
     ]
   }
 ];
@@ -572,8 +573,16 @@ function PlayerProfile({ player }: { player: PlayerData }) {
 }
 
 export default function PlayersPage() {
-  const [selectedPlayer, setSelectedPlayer] = useState<PlayerData | null>(players[0]);
+  const searchParams = useSearchParams();
+  const [selectedPlayer, setSelectedPlayer] = useState<PlayerData | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const memberName = searchParams.get('member');
+    setSelectedPlayer(players.find(p => p.name === memberName) || players[0]);
+  }, [searchParams]);
+
+  if (!selectedPlayer) return null;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -637,4 +646,4 @@ export default function PlayersPage() {
       </div>
     </div>
   );
-} 
+}

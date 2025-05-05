@@ -30,6 +30,33 @@ interface TeamMember {
 
 // Add completed matchups data
 const completedMatchups: CompletedMatchup[] = [
+  // Second Round
+  {
+    id: 'TOR-CAR',
+    winner: 'CAR',
+    games: 5
+  },
+  {
+    id: 'WSH-FLA',
+    winner: 'FLA',
+    games: 6
+  },
+  {
+    id: 'VGK-EDM',
+    winner: 'VGK',
+    games: 6
+  },
+  {
+    id: 'WPG-DAL',
+    winner: 'DAL',
+    games: 6
+  },
+  // First Round
+  {
+    id: 'TOR-OTT',
+    winner: 'TOR',
+    games: 6
+  },
   {
     id: 'CAR-NJD',
     winner: 'CAR',
@@ -44,6 +71,26 @@ const completedMatchups: CompletedMatchup[] = [
     id: 'TBL-FLA',
     winner: 'FLA',
     games: 5
+  },
+  {
+    id: 'VGK-MIN',
+    winner: 'VGK',
+    games: 6
+  },
+  {
+    id: 'LA-EDM',
+    winner: 'EDM',
+    games: 6
+  },
+  {
+    id: 'WPG-STL',
+    winner: 'WPG',
+    games: 7
+  },
+  {
+    id: 'DAL-COL',
+    winner: 'DAL',
+    games: 7
   }
 ];
 
